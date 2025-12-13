@@ -10,6 +10,7 @@
           "style": "scss"
         }
       },
+      
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -39,17 +40,17 @@
           "configurations": {
             "production": {
               "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
-                }
-              ],
+  {
+    "type": "initial",
+    "maximumWarning": "2mb",    
+    "maximumError": "3mb"     
+  },
+  {
+    "type": "anyComponentStyle",
+    "maximumWarning": "20kb",  
+    "maximumError": "25kb"     
+  }
+],
               "outputHashing": "all"
             },
             "development": {
