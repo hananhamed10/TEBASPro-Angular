@@ -1,0 +1,136 @@
+// Order Details Styling
+.order-details {
+  .order-item-card {
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background-color: #f8f9fa;
+      transform: translateY(-2px);
+    }
+  }
+}
+
+// Tracking Progress
+.tracking-progress {
+  .tracking-step {
+    display: flex;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid #eee;
+    
+    &:last-child {
+      border-bottom: none;
+    }
+    
+    &.completed {
+      .step-icon {
+        background-color: #28a745;
+        color: white;
+      }
+      
+      .step-info h6 {
+        color: #28a745;
+      }
+    }
+    
+    .step-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #e9ecef;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+      color: #6c757d;
+    }
+    
+    .step-info {
+      flex: 1;
+    }
+  }
+}
+
+// Timeline
+.timeline {
+  position: relative;
+  padding-left: 2rem;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: #dee2e6;
+  }
+  
+  .timeline-item {
+    position: relative;
+    margin-bottom: 1.5rem;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    .timeline-icon {
+      position: absolute;
+      left: -2rem;
+      top: 0;
+      background: white;
+      color: #6c757d;
+      font-size: 1rem;
+    }
+    
+    .timeline-content {
+      padding-left: 1rem;
+    }
+  }
+}
+
+// Print Styles
+@media print {
+  .container {
+    max-width: 100%;
+    padding: 0;
+  }
+  
+  .card {
+    border: 1px solid #ddd;
+    box-shadow: none;
+  }
+  
+  .btn, .nav-tabs, .breadcrumb {
+    display: none !important;
+  }
+  
+  .order-summary {
+    page-break-inside: avoid;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .tracking-step {
+    flex-direction: column;
+    text-align: center;
+    
+    .step-icon {
+      margin-right: 0;
+      margin-bottom: 0.5rem;
+    }
+  }
+  
+  .timeline {
+    padding-left: 1.5rem;
+    
+    &::before {
+      left: 10px;
+    }
+    
+    .timeline-item .timeline-icon {
+      left: -1.5rem;
+    }
+  }
+}

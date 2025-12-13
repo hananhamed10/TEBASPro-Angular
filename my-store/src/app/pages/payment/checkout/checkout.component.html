@@ -1,0 +1,241 @@
+<div class="container mt-4">
+  <div class="row">
+    <!-- Left Column - Form -->
+    <div class="col-lg-8">
+      <h1 class="h3 mb-4">Checkout</h1>
+
+      <form [formGroup]="checkoutForm" (ngSubmit)="placeOrder()">
+        <!-- Shipping Information -->
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-header bg-white">
+            <h5 class="mb-0">Shipping Information</h5>
+          </div>
+          <div class="card-body">
+            <!-- First Name -->
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">First Name <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" 
+                       formControlName="firstName"
+                       [class.is-invalid]="checkoutForm.get('firstName')?.invalid && checkoutForm.get('firstName')?.touched">
+                <div *ngIf="checkoutForm.get('firstName')?.invalid && checkoutForm.get('firstName')?.touched" 
+                     class="invalid-feedback">
+                  <div *ngIf="checkoutForm.get('firstName')?.errors?.['required']">
+                    First name is required
+                  </div>
+                  <div *ngIf="checkoutForm.get('firstName')?.errors?.['minlength']">
+                    Minimum 2 characters required
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Last Name -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Last Name <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" 
+                       formControlName="lastName"
+                       [class.is-invalid]="checkoutForm.get('lastName')?.invalid && checkoutForm.get('lastName')?.touched">
+                <div *ngIf="checkoutForm.get('lastName')?.invalid && checkoutForm.get('lastName')?.touched" 
+                     class="invalid-feedback">
+                  <div *ngIf="checkoutForm.get('lastName')?.errors?.['required']">
+                    Last name is required
+                  </div>
+                  <div *ngIf="checkoutForm.get('lastName')?.errors?.['minlength']">
+                    Minimum 2 characters required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+              <label class="form-label">Email <span class="text-danger">*</span></label>
+              <input type="email" class="form-control" 
+                     formControlName="email"
+                     [class.is-invalid]="checkoutForm.get('email')?.invalid && checkoutForm.get('email')?.touched">
+              <div *ngIf="checkoutForm.get('email')?.invalid && checkoutForm.get('email')?.touched" 
+                   class="invalid-feedback">
+                <div *ngIf="checkoutForm.get('email')?.errors?.['required']">
+                  Email is required
+                </div>
+                <div *ngIf="checkoutForm.get('email')?.errors?.['email']">
+                  Please enter a valid email
+                </div>
+              </div>
+            </div>
+
+            <!-- Phone -->
+            <div class="mb-3">
+              <label class="form-label">Phone Number <span class="text-danger">*</span></label>
+              <input type="tel" class="form-control" 
+                     formControlName="phone"
+                     placeholder="01XXXXXXXXX"
+                     [class.is-invalid]="checkoutForm.get('phone')?.invalid && checkoutForm.get('phone')?.touched">
+              <div *ngIf="checkoutForm.get('phone')?.invalid && checkoutForm.get('phone')?.touched" 
+                   class="invalid-feedback">
+                <div *ngIf="checkoutForm.get('phone')?.errors?.['required']">
+                  Phone number is required
+                </div>
+                <div *ngIf="checkoutForm.get('phone')?.errors?.['pattern']">
+                  Please enter a valid Egyptian phone number
+                </div>
+              </div>
+            </div>
+
+            <!-- Address -->
+            <div class="mb-3">
+              <label class="form-label">Address <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" 
+                     formControlName="address"
+                     [class.is-invalid]="checkoutForm.get('address')?.invalid && checkoutForm.get('address')?.touched">
+              <div *ngIf="checkoutForm.get('address')?.invalid && checkoutForm.get('address')?.touched" 
+                   class="invalid-feedback">
+                <div *ngIf="checkoutForm.get('address')?.errors?.['required']">
+                  Address is required
+                </div>
+                <div *ngIf="checkoutForm.get('address')?.errors?.['minlength']">
+                  Minimum 5 characters required
+                </div>
+              </div>
+            </div>
+
+            <!-- City -->
+            <div class="mb-3">
+              <label class="form-label">City <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" 
+                     formControlName="city"
+                     [class.is-invalid]="checkoutForm.get('city')?.invalid && checkoutForm.get('city')?.touched">
+              <div *ngIf="checkoutForm.get('city')?.invalid && checkoutForm.get('city')?.touched" 
+                   class="invalid-feedback">
+                <div *ngIf="checkoutForm.get('city')?.errors?.['required']">
+                  City is required
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Method -->
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-header bg-white">
+            <h5 class="mb-0">Payment Method</h5>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <label class="form-label">Select Payment Method <span class="text-danger">*</span></label>
+              <div class="list-group">
+                <label class="list-group-item d-flex align-items-center" 
+                       *ngFor="let method of paymentMethods">
+                  <input type="radio" 
+                         [value]="method.value" 
+                         formControlName="paymentMethod"
+                         class="form-check-input me-3">
+                  <div>
+                    <strong>{{method.label}}</strong>
+                    <div class="small text-muted mt-1">
+                      {{getPaymentMethodDescription(method.value)}}
+                    </div>
+                  </div>
+                </label>
+              </div>
+              <div *ngIf="checkoutForm.get('paymentMethod')?.invalid && checkoutForm.get('paymentMethod')?.touched" 
+                   class="text-danger small mt-2">
+                Please select a payment method
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Place Order Button -->
+        <button type="submit" 
+                class="btn btn-primary btn-lg w-100 py-3 mb-4"
+                [disabled]="checkoutForm.invalid || isLoading">
+          <span *ngIf="!isLoading">Place Order</span>
+          <span *ngIf="isLoading">
+            <span class="spinner-border spinner-border-sm me-2"></span>
+            Processing...
+          </span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Right Column - Order Summary -->
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm sticky-top" style="top: 100px;">
+        <div class="card-body">
+          <h5 class="card-title mb-4">Order Summary</h5>
+          
+          <!-- Cart Items -->
+          <div *ngIf="cartItems.length > 0; else emptyCart">
+            <div class="mb-4">
+              <h6 class="text-muted mb-3">Items ({{cartItems.length}})</h6>
+              <div class="overflow-auto" style="max-height: 300px;">
+                <div class="d-flex align-items-center mb-3 pb-3 border-bottom" 
+                     *ngFor="let item of cartItems">
+                  <img [src]="item.product.image" 
+                       [alt]="item.product.name"
+                       class="rounded" 
+                       style="width: 60px; height: 60px; object-fit: cover;">
+                  <div class="ms-3 flex-grow-1">
+                    <div class="fw-medium">{{item.product.name}}</div>
+                    <div class="small text-muted">Quantity: {{item.quantity}}</div>
+                    <div class="text-primary fw-medium">
+                      ${{(item.product.price * item.quantity).toFixed(2)}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Order Totals -->
+            <div class="border-top pt-3">
+              <div class="d-flex justify-content-between mb-2">
+                <span>Subtotal</span>
+                <span>${{totalAmount.toFixed(2)}}</span>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span>Shipping</span>
+                <span>$9.99</span>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span>Tax</span>
+                <span>${{(totalAmount * 0.14).toFixed(2)}}</span>
+              </div>
+              <div class="d-flex justify-content-between mb-3 pt-2 border-top">
+                <strong>Total</strong>
+                <strong class="h5 text-primary">
+                  ${{(totalAmount + 9.99 + (totalAmount * 0.14)).toFixed(2)}}
+                </strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Empty Cart Message -->
+          <ng-template #emptyCart>
+            <div class="text-center py-4">
+              <i class="bi bi-cart-x text-muted" style="font-size: 3rem;"></i>
+              <p class="text-muted mt-3">Your cart is empty</p>
+              <a routerLink="/products" class="btn btn-outline-primary btn-sm">
+                Continue Shopping
+              </a>
+            </div>
+          </ng-template>
+
+          <!-- Payment Method Info -->
+          <div class="mt-4" *ngIf="checkoutForm.get('paymentMethod')?.value">
+            <div class="alert alert-light border">
+              <div class="d-flex align-items-center mb-2">
+                <i class="bi bi-credit-card me-2"></i>
+                <strong>Payment Method:</strong>
+              </div>
+              <div class="fw-medium">{{getPaymentMethodLabel(checkoutForm.get('paymentMethod')?.value)}}</div>
+              <div class="small text-muted mt-1">
+                {{getPaymentMethodDescription(checkoutForm.get('paymentMethod')?.value)}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

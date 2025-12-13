@@ -1,0 +1,370 @@
+<div class="track-order-page">
+  <!-- Success Alert -->
+  <div *ngIf="!loading && tracking" class="container mt-4">
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <i class="fas fa-check-circle me-2"></i>
+      <strong>Order #{{ orderNumber }} is being tracked</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  </div>
+
+  <div class="container mt-4">
+    <!-- Header -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h4 class="mb-1">
+              <i class="fas fa-truck text-primary me-2"></i>
+              Track Order
+            </h4>
+            <p class="text-muted mb-0" *ngIf="orderNumber">
+              Tracking Order #{{ orderNumber }}
+            </p>
+          </div>
+          
+          <div class="d-flex gap-2">
+            <button class="btn btn-outline-primary" (click)="refreshTracking()" 
+                    [disabled]="loading">
+              <i class="fas fa-sync-alt" [class.fa-spin]="loading"></i>
+            </button>
+            
+            <button class="btn btn-outline-success" (click)="shareTracking()">
+              <i class="fas fa-share-alt"></i>
+            </button>
+            
+            <button class="btn btn-outline-secondary" (click)="goBack()">
+              <i class="fas fa-arrow-left"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-3">Loading tracking information...</p>
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="!loading && error" class="text-center py-5">
+      <div class="alert alert-danger">
+        <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
+        <h4>Unable to load tracking</h4>
+        <p class="mb-4">We couldn't find tracking information for this order.</p>
+        <button class="btn btn-primary" (click)="refreshTracking()">
+          Try Again
+        </button>
+        <button class="btn btn-outline-secondary ms-2" (click)="goBack()">
+          Back to Orders
+        </button>
+      </div>
+    </div>
+
+    <!-- Tracking Content -->
+    <div *ngIf="!loading && tracking && !error" class="tracking-content">
+      <!-- Order Status Card -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-md-8">
+              <div class="d-flex align-items-center mb-3">
+                <div class="status-icon me-3">
+                  <i [class]="getStatusIcon(tracking.status)" 
+                     class="fa-2x"
+                     [ngClass]="'text-' + getStatusColor(tracking.status)"></i>
+                </div>
+                <div>
+                  <h5 class="mb-1">Status: {{ tracking.status | titlecase }}</h5>
+                  <p class="text-muted mb-0" *ngIf="tracking.statusDescription">
+                    {{ tracking.statusDescription }}
+                  </p>
+                </div>
+              </div>
+              
+              <!-- Progress Bar -->
+              <div class="progress mb-3" style="height: 10px;">
+                <div class="progress-bar" 
+                     [ngClass]="'bg-' + getStatusColor(tracking.status)"
+                     [style.width.%]="getProgressPercentage()"
+                     role="progressbar">
+                </div>
+              </div>
+              
+              <div class="d-flex justify-content-between small text-muted">
+                <span>Order Placed</span>
+                <span *ngIf="tracking.status !== 'delivered'">
+                  {{ getEstimatedTime() }}
+                </span>
+                <span *ngIf="tracking.status === 'delivered'">Delivered</span>
+              </div>
+            </div>
+            
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+              <div class="d-grid gap-2">
+                <button class="btn btn-primary" (click)="viewOrderDetails()">
+                  <i class="fas fa-file-invoice me-2"></i>View Order
+                </button>
+                <button class="btn btn-outline-success" (click)="downloadInvoice()">
+                  <i class="fas fa-download me-2"></i>Download Invoice
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tracking Info Cards -->
+      <div class="row">
+        <!-- Left Column -->
+        <div class="col-lg-8">
+          <!-- Tracking Timeline -->
+          <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+              <h5 class="mb-0">
+                <i class="fas fa-history me-2"></i>
+                Tracking History
+              </h5>
+              
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="liveTracking" 
+                       [(ngModel)]="liveUpdates" (change)="toggleLiveUpdates()">
+                <label class="form-check-label" for="liveTracking">
+                  Live Updates
+                </label>
+              </div>
+            </div>
+            
+            <div class="card-body">
+              <div class="timeline">
+                <div *ngFor="let event of tracking.events; let i = index" 
+                     class="timeline-item"
+                     [class.active]="i === 0">
+                  
+                  <div class="timeline-marker">
+                    <div class="marker-dot" [ngClass]="'bg-' + getStatusColor(event.status)"></div>
+                    <div class="marker-line" *ngIf="i !== tracking.events.length - 1"></div>
+                  </div>
+                  
+                  <div class="timeline-content">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                      <h6 class="mb-0">{{ event.status | titlecase }}</h6>
+                      <small class="text-muted">{{ event.date | date:'medium' }}</small>
+                    </div>
+                    
+                    <div *ngIf="event.location" class="d-flex align-items-center mb-2">
+                      <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                      <span class="small">{{ event.location }}</span>
+                    </div>
+                    
+                    <p *ngIf="event.description" class="mb-0 text-muted">
+                      {{ event.description }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Delivery Person (إذا كانت الشحن نشط) -->
+          <div *ngIf="isTrackable()" class="card shadow-sm mb-4">
+            <div class="card-body">
+              <h5 class="card-title mb-3">
+                <i class="fas fa-user-tie me-2"></i>
+                Delivery Information
+              </h5>
+              
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="delivery-person-card p-3 bg-light rounded">
+                    <div class="d-flex align-items-center mb-3">
+                      <img [src]="deliveryPerson.photo" 
+                           class="rounded-circle me-3" 
+                           width="60" 
+                           height="60"
+                           alt="Delivery Person">
+                      <div>
+                        <h6 class="mb-1">{{ deliveryPerson.name }}</h6>
+                        <div class="small">
+                          <i class="fas fa-star text-warning"></i>
+                          {{ deliveryPerson.rating }}/5.0
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                      <button class="btn btn-outline-primary" (click)="contactDriver()">
+                        <i class="fas fa-phone me-2"></i>
+                        Call Driver
+                      </button>
+                      <button class="btn btn-outline-secondary" (click)="toggleMap()">
+                        <i class="fas fa-map me-2"></i>
+                        {{ showMap ? 'Hide' : 'Show' }} Live Map
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <div class="p-3">
+                    <h6 class="mb-3">Delivery Instructions</h6>
+                    <ul class="list-unstyled small">
+                      <li class="mb-2">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Signature may be required
+                      </li>
+                      <li class="mb-2">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Check package upon arrival
+                      </li>
+                      <li class="mb-2">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Report issues within 48 hours
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Live Map Simulation -->
+              <div *ngIf="showMap" class="mt-4">
+                <div class="map-placeholder p-4 bg-light rounded text-center">
+                  <i class="fas fa-map-marked-alt fa-3x text-primary mb-3"></i>
+                  <h6>Live Tracking Map</h6>
+                  <p class="text-muted small mb-3">
+                    Current Location: {{ mapLocation.lat.toFixed(4) }}, {{ mapLocation.lng.toFixed(4) }}
+                  </p>
+                  <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                         style="width: 75%">
+                      On the way to destination
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column - Info Panel -->
+        <div class="col-lg-4">
+          <!-- Order Summary -->
+          <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white">
+              <h5 class="mb-0">
+                <i class="fas fa-info-circle me-2"></i>
+                Order Summary
+              </h5>
+            </div>
+            <div class="card-body">
+              <table class="table table-sm">
+                <tr>
+                  <th>Order Number:</th>
+                  <td>{{ orderNumber }}</td>
+                </tr>
+                <tr>
+                  <th>Carrier:</th>
+                  <td>{{ tracking.carrier }}</td>
+                </tr>
+                <tr>
+                  <th>Service:</th>
+                  <td>{{ tracking.service }}</td>
+                </tr>
+                <tr>
+                  <th>Tracking #:</th>
+                  <td>
+                    <code>{{ tracking.trackingNumber }}</code>
+                    <button class="btn btn-sm btn-outline-primary ms-2" 
+                            (click)="copyTrackingNumber()">
+                      <i class="fas fa-copy"></i>
+                    </button>
+                  </td>
+                </tr>
+                <tr *ngIf="tracking.estimatedDelivery">
+                  <th>Est. Delivery:</th>
+                  <td>
+                    {{ tracking.estimatedDelivery | date:'fullDate' }}
+                    <br>
+                    <small class="text-muted">{{ getEstimatedTime() }}</small>
+                  </td>
+                </tr>
+                <tr *ngIf="tracking.weight">
+                  <th>Weight:</th>
+                  <td>{{ tracking.weight }}</td>
+                </tr>
+                <tr *ngIf="tracking.dimensions">
+                  <th>Dimensions:</th>
+                  <td>{{ tracking.dimensions }}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="card shadow-sm mb-4">
+            <div class="card-body">
+              <h6 class="mb-3">Quick Actions</h6>
+              <div class="d-grid gap-2">
+                <button class="btn btn-outline-primary" (click)="viewOrderDetails()">
+                  <i class="fas fa-eye me-2"></i>View Order Details
+                </button>
+                
+                <button class="btn btn-outline-success" (click)="downloadInvoice()">
+                  <i class="fas fa-file-pdf me-2"></i>Download Invoice
+                </button>
+                
+                <button class="btn btn-outline-info" (click)="contactSupport()">
+                  <i class="fas fa-headset me-2"></i>Contact Support
+                </button>
+                
+                <button class="btn btn-outline-warning" [routerLink]="['/help', 'shipping']">
+                  <i class="fas fa-question-circle me-2"></i>Shipping FAQ
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Shipping Updates -->
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h6 class="mb-3">
+                <i class="fas fa-bell me-2"></i>
+                Get Updates
+              </h6>
+              
+              <div class="mb-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="smsUpdates">
+                  <label class="form-check-label small" for="smsUpdates">
+                    SMS notifications
+                  </label>
+                </div>
+                
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="emailUpdates" checked>
+                  <label class="form-check-label small" for="emailUpdates">
+                    Email updates
+                  </label>
+                </div>
+                
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="pushUpdates">
+                  <label class="form-check-label small" for="pushUpdates">
+                    Push notifications
+                  </label>
+                </div>
+              </div>
+              
+              <button class="btn btn-outline-primary w-100">
+                <i class="fas fa-save me-2"></i>Save Preferences
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

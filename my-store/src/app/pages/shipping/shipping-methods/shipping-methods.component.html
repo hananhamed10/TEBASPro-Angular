@@ -1,0 +1,159 @@
+<div class="container mt-4">
+  <!-- Header -->
+  <nav class="navbar navbar-light bg-light mb-4">
+    <div class="container-fluid">
+      <a class="navbar-brand" routerLink="/cart">
+        <i class="fas fa-arrow-left me-2"></i> Back to Cart
+      </a>
+      <h4 class="mb-0">Shipping Methods</h4>
+    </div>
+  </nav>
+
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2">Loading shipping methods...</p>
+  </div>
+
+  <div *ngIf="!loading" class="row">
+    <div class="col-lg-8">
+      <!-- Shipping Methods List -->
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title mb-4">Select Shipping Method</h5>
+          
+          <div class="list-group">
+            <div *ngFor="let method of methods" 
+                 class="list-group-item list-group-item-action"
+                 [class.active]="selectedMethod === method.id"
+                 (click)="selectMethod(method.id)"
+                 style="cursor: pointer;">
+              
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <h6 class="mb-1">{{ method.name }}</h6>
+                  <p class="mb-1 text-muted small">{{ method.description }}</p>
+                  <p class="mb-0 small">
+                    <i class="fas fa-calendar-alt me-1"></i>
+                    Estimated delivery: {{ method.estimatedDays }} day(s)
+                  </p>
+                </div>
+                
+                <div class="text-end">
+                  <h5 class="mb-0">
+                    {{ method.price === 0 ? 'FREE' : (method.price | currency:'USD') }}
+                  </h5>
+                  <small *ngIf="method.freeThreshold > 0" class="text-success">
+                    Free on orders over {{ method.freeThreshold | currency:'USD' }}
+                  </small>
+                </div>
+              </div>
+              
+              <!-- Pickup Locations -->
+              <div *ngIf="method.pickupLocations" class="mt-3">
+                <small class="text-muted">Available pickup locations:</small>
+                <ul class="list-unstyled mb-0 small">
+                  <li *ngFor="let location of method.pickupLocations">
+                    <i class="fas fa-map-marker-alt me-2 text-primary"></i>
+                    {{ location }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shipping Address -->
+      <div class="card mt-4">
+        <div class="card-body">
+          <h5 class="card-title mb-3">Shipping Address</h5>
+          
+          <div *ngIf="selectedAddress" class="address-card p-3 bg-light rounded">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <h6 class="mb-1">{{ selectedAddress.fullName }}</h6>
+                <p class="mb-1 small">{{ selectedAddress.street }}</p>
+                <p class="mb-1 small">
+                  {{ selectedAddress.city }}, {{ selectedAddress.state }} {{ selectedAddress.zipCode }}
+                </p>
+                <p class="mb-0 small">{{ selectedAddress.country }}</p>
+                <p class="mb-0 small">
+                  <i class="fas fa-phone me-1"></i>
+                  {{ selectedAddress.phone }}
+                </p>
+              </div>
+              <button class="btn btn-outline-primary btn-sm" (click)="changeAddress()">
+                Change
+              </button>
+            </div>
+          </div>
+          
+          <div *ngIf="!selectedAddress" class="text-center py-3">
+            <p class="text-muted">No shipping address selected</p>
+            <button class="btn btn-primary" (click)="addAddress()">
+              <i class="fas fa-plus me-2"></i> Add Shipping Address
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="col-lg-4">
+      <div class="card sticky-top" style="top: 20px;">
+        <div class="card-body">
+          <h5 class="card-title mb-3">Order Summary</h5>
+          
+          <div class="mb-3">
+            <div class="d-flex justify-content-between mb-2">
+              <span>Subtotal</span>
+              <span>{{ orderSummary.subtotal | currency:'USD' }}</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Shipping</span>
+              <span *ngIf="selectedMethod">
+                {{ getSelectedMethod()?.price === 0 ? 'FREE' : (getSelectedMethod()?.price | currency:'USD') }}
+              </span>
+              <span *ngIf="!selectedMethod" class="text-muted">Select method</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Tax</span>
+              <span>{{ orderSummary.tax | currency:'USD' }}</span>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between fw-bold">
+              <span>Total</span>
+              <span>{{ calculateTotal() | currency:'USD' }}</span>
+            </div>
+          </div>
+          
+          <div class="d-grid gap-2">
+            <button class="btn btn-primary btn-lg" 
+                    [disabled]="!selectedMethod || !selectedAddress"
+                    (click)="continueToPayment()">
+              <i class="fas fa-lock me-2"></i>
+              Continue to Payment
+            </button>
+            
+            <button class="btn btn-outline-secondary" routerLink="/cart">
+              <i class="fas fa-shopping-cart me-2"></i>
+              Return to Cart
+            </button>
+          </div>
+          
+          <div *ngIf="!selectedMethod" class="alert alert-warning mt-3 mb-0">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            Please select a shipping method
+          </div>
+          
+          <div *ngIf="!selectedAddress" class="alert alert-warning mt-3 mb-0">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            Please add a shipping address
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

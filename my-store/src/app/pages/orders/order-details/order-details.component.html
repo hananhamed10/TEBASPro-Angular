@@ -1,0 +1,298 @@
+<div class="container mt-4">
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a routerLink="/orders" class="text-decoration-none text-primary">
+          <i class="fas fa-arrow-left me-2"></i>Back to Orders
+        </a>
+      </li>
+      <li class="breadcrumb-item active fw-bold">Order #{{ order?.orderNumber || orderId }}</li>
+    </ol>
+  </nav>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2 text-muted">Loading order details...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="!loading && error" class="alert alert-danger">
+    <i class="fas fa-exclamation-triangle me-2"></i>{{ error }}
+    <button class="btn btn-outline-danger btn-sm ms-3" (click)="goBackToOrders()">
+      Return to Orders
+    </button>
+  </div>
+
+  <!-- Order Details -->
+  <div *ngIf="!loading && order && !error" class="row">
+    <!-- Left Column - Main Details -->
+    <div class="col-lg-8">
+      <!-- Order Header Card -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <h4 class="card-title mb-1">Order #{{ order.orderNumber }}</h4>
+              <p class="text-muted mb-0">Placed on {{ formatDate(order.createdAt) }}</p>
+            </div>
+            <span class="badge fs-6" [ngClass]="getStatusClass(order.status)">
+              {{ getStatusText(order.status) }}
+            </span>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="d-flex flex-wrap gap-2 mb-4">
+            <button class="btn btn-outline-primary" (click)="downloadInvoice()">
+              <i class="fas fa-download me-2"></i>Download Invoice
+            </button>
+            <button class="btn btn-outline-secondary" (click)="printInvoice()">
+              <i class="fas fa-print me-2"></i>Print
+            </button>
+            <button *ngIf="order.status === 'pending' || order.status === 'processing'" 
+                    class="btn btn-outline-danger" (click)="cancelOrder()">
+              <i class="fas fa-times me-2"></i>Cancel Order
+            </button>
+            <button class="btn btn-outline-success" (click)="reorder()">
+              <i class="fas fa-redo me-2"></i>Reorder All
+            </button>
+            <button *ngIf="order.status === 'shipped'" 
+                    class="btn btn-outline-info" (click)="trackOrder()">
+              <i class="fas fa-truck me-2"></i>Track Order
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs Navigation -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+          <ul class="nav nav-tabs card-header-tabs">
+            <li class="nav-item">
+              <a class="nav-link" [class.active]="activeTab === 'items'" 
+                 (click)="setActiveTab('items')">
+                <i class="fas fa-box me-2"></i>Order Items
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" [class.active]="activeTab === 'tracking'" 
+                 (click)="setActiveTab('tracking')">
+                <i class="fas fa-shipping-fast me-2"></i>Tracking
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" [class.active]="activeTab === 'shipping'" 
+                 (click)="setActiveTab('shipping')">
+                <i class="fas fa-map-marker-alt me-2"></i>Shipping
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="card-body">
+          <!-- Items Tab -->
+          <div *ngIf="activeTab === 'items'" class="order-items">
+            <div *ngFor="let item of order.items" class="order-item-card mb-3 p-3 border rounded">
+              <div class="row align-items-center">
+                <!-- Product Image -->
+                <div class="col-2 col-md-1">
+                  <img [src]="item.product.image || 'assets/images/placeholder.jpg'" 
+                       class="img-fluid rounded" 
+                       [alt]="item.product.name || 'Product'"
+                       style="max-height: 60px;">
+                </div>
+                
+                <!-- Product Details -->
+                <div class="col-5 col-md-6">
+                  <h6 class="mb-1">{{ item.product.name || 'Product' }}</h6>
+                  <div class="text-muted small">
+                    <span *ngIf="item.color">Color: {{ item.color }}</span>
+                    <span *ngIf="item.size"> | Size: {{ item.size }}</span>
+                  </div>
+                  <small class="text-muted">Quantity: {{ item.quantity }}</small>
+                </div>
+                
+                <!-- Price & Actions -->
+                <div class="col-5 col-md-5 text-end">
+                  <div class="mb-2">
+                    <span class="text-dark fw-bold">{{ item.price | currency:'USD':'symbol' }} each</span>
+                  </div>
+                  <div class="text-end">
+                    <strong class="h6">{{ (item.price * item.quantity) | currency:'USD':'symbol' }}</strong>
+                  </div>
+                  <button class="btn btn-sm btn-outline-primary mt-2" (click)="reorderItem(item)">
+                    <i class="fas fa-cart-plus me-1"></i>Reorder
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tracking Tab -->
+          <div *ngIf="activeTab === 'tracking'" class="tracking-tab">
+            <div class="tracking-progress">
+              <div *ngFor="let step of trackingSteps; let i = index" 
+                   class="tracking-step" [class.completed]="step.completed">
+                <div class="step-icon">
+                  <i [class]="step.icon"></i>
+                </div>
+                <div class="step-info">
+                  <h6 class="mb-1">{{ step.title }}</h6>
+                  <small class="text-muted" *ngIf="step.completed">
+                    Completed {{ formatDate(order.updatedAt) }}
+                  </small>
+                  <small class="text-muted" *ngIf="!step.completed">
+                    Pending
+                  </small>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Delivery Information -->
+            <div *ngIf="order.delivery" class="mt-4">
+              <h6 class="mb-3">Delivery Information</h6>
+              <div class="row">
+                <div class="col-md-6">
+                  <p class="mb-1"><strong>Carrier:</strong> {{ order.delivery.carrier || 'Not specified' }}</p>
+                  <p class="mb-1"><strong>Tracking Number:</strong> {{ order.delivery.trackingNumber || 'Not available' }}</p>
+                </div>
+                <div class="col-md-6">
+                  <p class="mb-1"><strong>Estimated Delivery:</strong> 
+                    {{ formatDate(order.delivery.estimatedDate) }}
+                  </p>
+                  <p class="mb-1" *ngIf="order.delivery.deliveredAt">
+                    <strong>Delivered At:</strong> {{ formatDate(order.delivery.deliveredAt) }}
+                  </p>
+                </div>
+              </div>
+              <button class="btn btn-info mt-3" (click)="trackOrder()">
+                <i class="fas fa-external-link-alt me-2"></i>View Detailed Tracking
+              </button>
+            </div>
+          </div>
+
+          <!-- Shipping Tab -->
+          <div *ngIf="activeTab === 'shipping'" class="shipping-tab">
+            <!-- Shipping Address -->
+            <div *ngIf="order.shippingAddress" class="mb-4">
+              <h6 class="mb-3">Shipping Address</h6>
+              <div class="p-3 bg-light rounded">
+                <p class="mb-1"><strong>{{ order.shippingAddress.fullName || 'Not specified' }}</strong></p>
+                <p class="mb-1">{{ order.shippingAddress.street || '' }}</p>
+                <p class="mb-1">
+                  {{ order.shippingAddress.city || '' }}, 
+                  {{ order.shippingAddress.state || '' }} 
+                  {{ order.shippingAddress.zipCode || '' }}
+                </p>
+                <p class="mb-1">{{ order.shippingAddress.country || '' }}</p>
+                <p class="mb-0"><strong>Phone:</strong> {{ order.shippingAddress.phone || 'Not provided' }}</p>
+              </div>
+            </div>
+
+            <!-- Payment Information -->
+            <div *ngIf="order.payment" class="mb-4">
+              <h6 class="mb-3">Payment Information</h6>
+              <div class="p-3 bg-light rounded">
+                <p class="mb-1"><strong>Method:</strong> {{ (order.payment.method || '').toLowerCase() | titlecase }}</p>
+                <p class="mb-1">
+                  <strong>Status:</strong> 
+                  <span class="badge" [ngClass]="getStatusClass(order.payment.status || '')">
+                    {{ (order.payment.status || '').toLowerCase() | titlecase }}
+                  </span>
+                </p>
+                <p class="mb-0" *ngIf="order.payment.paidAt">
+                  <strong>Paid On:</strong> {{ formatDate(order.payment.paidAt) }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column - Order Summary -->
+    <div class="col-lg-4">
+      <!-- Order Summary Card -->
+      <div class="card shadow-sm sticky-top" style="top: 20px;">
+        <div class="card-header bg-white">
+          <h5 class="mb-0">Order Summary</h5>
+        </div>
+        <div class="card-body">
+          <!-- Summary Items -->
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Subtotal</span>
+            <span>{{ calculateSubtotal() | currency:'USD':'symbol' }}</span>
+          </div>
+          
+          <div class="d-flex justify-content-between mb-2" *ngIf="order.shipping">
+            <span class="text-muted">Shipping</span>
+            <span>{{ order.shipping | currency:'USD':'symbol' }}</span>
+          </div>
+          
+          <div class="d-flex justify-content-between mb-2" *ngIf="order.tax">
+            <span class="text-muted">Tax</span>
+            <span>{{ order.tax | currency:'USD':'symbol' }}</span>
+          </div>
+          
+          <div class="d-flex justify-content-between mb-3" *ngIf="order.discount">
+            <span class="text-muted">Discount</span>
+            <span class="text-success">-{{ order.discount | currency:'USD':'symbol' }}</span>
+          </div>
+          
+          <hr>
+          
+          <!-- Total -->
+          <div class="d-flex justify-content-between mb-4">
+            <strong>Total</strong>
+            <strong class="h5 text-primary">{{ calculateTotal() | currency:'USD':'symbol' }}</strong>
+          </div>
+          
+          <!-- Quick Actions -->
+          <div class="d-grid gap-2">
+            <button class="btn btn-primary" (click)="reorder()">
+              <i class="fas fa-redo me-2"></i>Reorder All Items
+            </button>
+            <button class="btn btn-outline-secondary" (click)="contactSupport()">
+              <i class="fas fa-headset me-2"></i>Contact Support
+            </button>
+            <button class="btn btn-outline-dark" (click)="goBackToOrders()">
+              <i class="fas fa-list me-2"></i>Back to Orders List
+            </button>
+          </div>
+          
+          <!-- Order Timeline -->
+          <div class="mt-4 pt-3 border-top">
+            <h6 class="mb-3">Order Timeline</h6>
+            <div class="timeline">
+              <div class="timeline-item">
+                <i class="fas fa-clock timeline-icon"></i>
+                <div class="timeline-content">
+                  <strong>Order Placed</strong>
+                  <p class="text-muted small mb-0">{{ formatDate(order.createdAt) }}</p>
+                </div>
+              </div>
+              <div class="timeline-item" *ngIf="order.updatedAt">
+                <i class="fas fa-sync-alt timeline-icon"></i>
+                <div class="timeline-content">
+                  <strong>Last Updated</strong>
+                  <p class="text-muted small mb-0">{{ formatDate(order.updatedAt) }}</p>
+                </div>
+              </div>
+              <div class="timeline-item" *ngIf="order.delivery?.estimatedDate">
+                <i class="fas fa-calendar-check timeline-icon"></i>
+                <div class="timeline-content">
+                  <strong>Estimated Delivery</strong>
+                 <p class="text-muted small mb-0">{{ formatDate(order.delivery?.estimatedDate) }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

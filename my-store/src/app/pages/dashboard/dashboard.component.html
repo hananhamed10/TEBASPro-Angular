@@ -1,0 +1,149 @@
+<div class="dashboard-container">
+  <div class="container">
+    
+    <!-- Welcome Banner -->
+    <div class="welcome-banner">
+      <div class="welcome-content">
+        <h1>
+          <span class="welcome-emoji">🎉</span>
+          Welcome to Your Dashboard!
+        </h1>
+        <p>You are successfully logged in. Manage your store, view analytics, and take quick actions from here.</p>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <!-- Revenue Card -->
+      <div class="stat-card revenue">
+        <div class="stat-icon-container">
+          <i class="fas fa-chart-line stat-icon"></i>
+        </div>
+        <h3 class="stat-title">Total Revenue</h3>
+        <h2 class="stat-value">$12,426</h2>
+        <p class="stat-subtitle">+12.5% from last month</p>
+      </div>
+
+      <!-- Customers Card -->
+      <div class="stat-card customers">
+        <div class="stat-icon-container">
+          <i class="fas fa-users stat-icon"></i>
+        </div>
+        <h3 class="stat-title">Total Customers</h3>
+        <h2 class="stat-value">1,248</h2>
+        <p class="stat-subtitle">+8.2% from last month</p>
+      </div>
+
+      <!-- Orders Card -->
+      <div class="stat-card orders">
+        <div class="stat-icon-container">
+          <i class="fas fa-shopping-cart stat-icon"></i>
+        </div>
+        <h3 class="stat-title">Total Orders</h3>
+        <h2 class="stat-value">356</h2>
+        <p class="stat-subtitle">+5.7% from last month</p>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="actions-grid">
+      <!-- Profile Card -->
+      <div class="action-card">
+        <div class="action-header">
+          <div class="action-icon">
+            <i class="fas fa-user"></i>
+          </div>
+          <div>
+            <h3 class="action-title">Profile Management</h3>
+            <p class="text-muted">Edit your personal information</p>
+          </div>
+        </div>
+        <p class="action-subtitle">
+          Update your profile details, change password, and manage account settings.
+        </p>
+        <a routerLink="/profile" class="action-button">
+          <i class="fas fa-arrow-right me-2"></i>
+          Go to Profile
+        </a>
+      </div>
+
+      <!-- Products Card -->
+      <div class="action-card">
+        <div class="action-header">
+          <div class="action-icon">
+            <i class="fas fa-box"></i>
+          </div>
+          <div>
+            <h3 class="action-title">Products Management</h3>
+            <p class="text-muted">Browse and manage products</p>
+          </div>
+        </div>
+        <p class="action-subtitle">
+          View all products, add new items, update prices, and manage inventory.
+        </p>
+        <a routerLink="/products" class="action-button">
+          <i class="fas fa-arrow-right me-2"></i>
+          View Products
+        </a>
+      </div>
+
+      <!-- Categories Card -->
+      <div class="action-card">
+        <div class="action-header">
+          <div class="action-icon">
+            <i class="fas fa-tags"></i>
+          </div>
+          <div>
+            <h3 class="action-title">Categories Management</h3>
+            <p class="text-muted">Organize product categories</p>
+          </div>
+        </div>
+        <p class="action-subtitle">
+          Create, edit, and manage product categories for better organization.
+        </p>
+        <a routerLink="/categories" class="action-button">
+          <i class="fas fa-arrow-right me-2"></i>
+          View Categories
+        </a>
+      </div>
+    </div>
+
+    <!-- Recent Activity (اختياري) -->
+    <div class="recent-activity">
+      <h2 class="activity-title">
+        <i class="fas fa-history text-primary"></i>
+        Recent Activity
+      </h2>
+      <ul class="activity-list">
+        <li class="activity-item">
+          <div class="activity-icon order">
+            <i class="fas fa-shopping-bag"></i>
+          </div>
+          <div class="activity-content">
+            <p class="activity-text">New order #ORD-7842 placed</p>
+            <span class="activity-time">2 hours ago</span>
+          </div>
+        </li>
+        <li class="activity-item">
+          <div class="activity-icon user">
+            <i class="fas fa-user-plus"></i>
+          </div>
+          <div class="activity-content">
+            <p class="activity-text">New customer registered</p>
+            <span class="activity-time">5 hours ago</span>
+          </div>
+        </li>
+        <li class="activity-item">
+          <div class="activity-icon product">
+            <i class="fas fa-box-open"></i>
+          </div>
+          <div class="activity-content">
+            <p class="activity-text">Product "Wireless Headphones" updated</p>
+            <span class="activity-time">Yesterday</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</div>

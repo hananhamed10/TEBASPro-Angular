@@ -1,0 +1,56 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-4">
+      <!-- Profile Card -->
+      <div class="card border-0 shadow-sm">
+        <div class="card-body text-center">
+          <img src="https://c.pxhere.com/images/0f/3f/4dbc54d34a6b984a6c5f283be804-1447673.jpg!d" class="rounded-circle mb-3" alt="Profile" width="120" height="120">
+          <h4 class="card-title">Hanan Hamed Elian</h4>
+          <p class="text-muted">HANAN.ELIAN&#64;example.com</p>
+          <p class="card-text">Senior Web Developer</p>
+          <div class="d-grid gap-2">
+            <button class="btn btn-primary">Edit Profile</button>
+            <button class="btn btn-outline-secondary">Change Password</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <!-- Profile Details -->
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white">
+          <h5 class="mb-0">Profile Information</h5>
+        </div>
+        <div class="card-body">
+          @for (field of profileFields; track field.label) {
+            <div class="row mb-3">
+              <div class="col-sm-3">
+                <strong>{{ field.label }}:</strong>
+              </div>
+              <div class="col-sm-9">
+                {{ field.value }}
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Account Settings -->
+      <div class="card border-0 shadow-sm mt-4">
+        <div class="card-header bg-white">
+          <h5 class="mb-0">Account Settings</h5>
+        </div>
+        <div class="card-body">
+          <div class="list-group list-group-flush">
+            @for (setting of accountSettings; track setting.name) {
+              <a href="#" class="list-group-item list-group-item-action">
+                <i class="{{ setting.icon }} me-2"></i>{{ setting.name }}
+              </a>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

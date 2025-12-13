@@ -1,0 +1,59 @@
+/* في category.component.css */
+.category-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: none;
+  border-radius: 12px;
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+}
+
+/* الألوان الجديدة */
+.btn-purple {
+  background-color: #6f42c1;
+  border-color: #6f42c1;
+  color: white;
+}
+
+.btn-purple:hover {
+  background-color: #5a32a3;
+  border-color: #5a32a3;
+  color: white;
+}
+
+.btn-orange {
+  background-color: #fd7e14;
+  border-color: #fd7e14;
+  color: white;
+}
+
+.btn-orange:hover {
+  background-color: #e66a00;
+  border-color: #e66a00;
+  color: white;
+}
+
+.btn-pink {
+  background-color: #e83e8c;
+  border-color: #e83e8c;
+  color: white;
+}
+
+.btn-pink:hover {
+  background-color: #d91a7a;
+  border-color: #d91a7a;
+  color: white;
+}
+
+/* تحسين شكل الأزرار */
+.btn-group-vertical .btn {
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-group-vertical .btn:hover {
+  transform: translateY(-2px);
+}

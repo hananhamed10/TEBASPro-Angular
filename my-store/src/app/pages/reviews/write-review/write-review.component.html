@@ -1,0 +1,77 @@
+<div class="container mt-4">
+  <!-- Header -->
+  <nav class="navbar navbar-light bg-light mb-4">
+    <div class="container-fluid">
+      <a class="navbar-brand" routerLink="/products">
+        <i class="fas fa-arrow-left me-2"></i> Back
+      </a>
+      <h4 class="mb-0">Write Review</h4>
+    </div>
+  </nav>
+
+  <form [formGroup]="reviewForm" (ngSubmit)="submitReview()" class="review-form">
+    <!-- Rating -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Your Rating</h5>
+        <div class="stars mb-3">
+          <i *ngFor="let star of [1,2,3,4,5]" 
+             class="fas fa-star fa-2x"
+             [class.text-warning]="star <= rating"
+             [class.text-muted]="star > rating"
+             (click)="setRating(star)"
+             style="cursor: pointer; margin-right: 10px;">
+          </i>
+        </div>
+        <p class="text-muted">Click stars to rate</p>
+      </div>
+    </div>
+
+    <!-- Title -->
+    <div class="mb-3">
+      <label for="reviewTitle" class="form-label">Review Title</label>
+      <input type="text" 
+             class="form-control" 
+             id="reviewTitle"
+             formControlName="title"
+             placeholder="Summarize your review">
+      <div *ngIf="reviewForm.get('title')?.invalid && reviewForm.get('title')?.touched" 
+           class="text-danger small">
+        Title is required
+      </div>
+    </div>
+
+    <!-- Comment -->
+    <div class="mb-4">
+      <label for="reviewComment" class="form-label">Your Review</label>
+      <textarea class="form-control" 
+                id="reviewComment"
+                formControlName="comment"
+                rows="6"
+                placeholder="Share your experience with this product..."></textarea>
+      <div *ngIf="reviewForm.get('comment')?.invalid && reviewForm.get('comment')?.touched" 
+           class="text-danger small">
+        Review must be at least 10 characters
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="d-grid gap-2">
+      <button type="submit" 
+              class="btn btn-primary btn-lg"
+              [disabled]="reviewForm.invalid || rating === 0 || submitting">
+        <span *ngIf="!submitting">Submit Review</span>
+        <span *ngIf="submitting">
+          <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+          Submitting...
+        </span>
+      </button>
+      
+      <button type="button" 
+              class="btn btn-outline-secondary"
+              routerLink="/products">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

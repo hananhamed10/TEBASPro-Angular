@@ -1,0 +1,36 @@
+.reviews-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.stars {
+  i {
+    color: #ffc107;
+    margin-right: 2px;
+    
+    &.text-muted {
+      color: #dee2e6 !important;
+    }
+  }
+}
+
+.btn-group {
+  .btn {
+    &.active {
+      background-color: #0d6efd;
+      color: white;
+      border-color: #0d6efd;
+    }
+  }
+}
+
+.reviews-list {
+  .card {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    
+    .card-body {
+      padding: 1.5rem;
+    }
+  }
+}

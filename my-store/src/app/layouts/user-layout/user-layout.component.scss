@@ -1,0 +1,87 @@
+/* Profile Page - Fresh Teal & Pink Theme */
+
+.profile-container {
+  background: linear-gradient(135deg, #f0fdfa 0%, #fdf2f8 100%);
+}
+
+/* Primary Colors */
+:root {
+  --primary: #0d9488;          /* تيركواز غامق */
+  --primary-light: #2dd4bf;    /* تيركواز فاتح */
+  --primary-dark: #0f766e;
+  --secondary: #db2777;        /* زهري */
+  --secondary-light: #f472b6;
+  --accent: #f59e0b;           /* برتقالي ذهبي */
+  
+  --dark: #1f2937;
+  --gray-dark: #4b5563;
+  --gray: #6b7280;
+  --gray-light: #d1d5db;
+  --gray-lighter: #e5e7eb;
+  --gray-lightest: #f9fafb;
+}
+
+.profile-card {
+  background: linear-gradient(135deg, #ffffff 0%, #fdf2f8 100%);
+  box-shadow: 0 20px 40px rgba(13, 148, 136, 0.08);
+}
+
+.profile-card:hover::before {
+  background: linear-gradient(45deg, 
+    #0d9488, #db2777, #f59e0b, #2dd4bf);
+}
+
+.profile-img {
+  border: 4px solid #ffffff;
+  box-shadow: 0 10px 25px rgba(13, 148, 136, 0.2);
+}
+
+.profile-img-wrapper::after {
+  background: linear-gradient(45deg, 
+    #0d9488 0%, #db2777 50%, #f59e0b 100%);
+}
+
+.profile-role {
+  color: #0d9488;
+  background: rgba(13, 148, 136, 0.1);
+  border: 1px solid rgba(13, 148, 136, 0.2);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+  box-shadow: 0 4px 15px rgba(13, 148, 136, 0.25);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
+  box-shadow: 0 8px 25px rgba(13, 148, 136, 0.4);
+}
+
+.btn-outline:hover {
+  border-color: #0d9488;
+  color: #0d9488;
+  background: rgba(13, 148, 136, 0.05);
+}
+
+.card-header h5::after {
+  background: linear-gradient(90deg, #0d9488, #db2777);
+}
+
+.setting-item:hover {
+  color: #0d9488;
+  background: linear-gradient(90deg, 
+    rgba(13, 148, 136, 0.05) 0%, 
+    rgba(219, 39, 119, 0.02) 100%);
+}
+
+.setting-item::before {
+  background: linear-gradient(180deg, #0d9488, #db2777);
+}
+
+.setting-item:hover .setting-icon {
+  background: linear-gradient(135deg, #0d9488, #db2777);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #0d9488, #db2777);
+}

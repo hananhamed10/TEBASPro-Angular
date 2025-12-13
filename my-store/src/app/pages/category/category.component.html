@@ -1,0 +1,59 @@
+<div class="container mt-4">
+  <h2 class="mb-4">{{ 'all categories' | capitalize:true }}</h2>
+  <div class="row">
+    <div class="col-md-6 col-lg-4 mb-4" *ngFor="let category of categories">
+      <div class="card category-card h-100 shadow-sm">
+        <img [src]="category.image" [alt]="category.name" class="card-img-top" style="height: 200px; object-fit: cover;">
+        
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title text-primary">{{ category.name | uppercaseFirst }}</h5>
+          <p class="card-text text-muted flex-grow-1">{{ category.description | truncate:80 }}</p>
+          
+          <div class="category-meta mb-3">
+            <small class="text-success">
+              <i class="fas fa-cube me-1"></i>
+              {{ category.products.length }} {{ 'products' | capitalize }}
+            </small>
+          </div>
+
+          <!-- Preview of Products in this Category -->
+          <div class="products-preview mb-3">
+            <h6 class="text-muted mb-2">{{ 'featured products' | capitalize:true }}:</h6>
+            <div class="d-flex flex-wrap gap-2">
+              <span *ngFor="let product of category.products.slice(0, 3)" 
+                    class="badge bg-light text-dark border">
+                {{ product.name | truncate:15 }}
+              </span>
+              <span *ngIf="category.products.length > 3" class="badge bg-secondary">
+                +{{ category.products.length - 3 }} more
+              </span>
+            </div>
+          </div>
+
+          <!-- الأزرار -->
+          <div class="btn-group-vertical w-100">
+            <!-- Category Details - يروح لصفحة التفاصيل -->
+            <a [routerLink]="['/categories', category.id]" class="btn btn-info mb-2">
+              <i class="fas fa-info-circle me-1"></i>{{ 'category details' | capitalize:true }}
+            </a>
+
+            <!-- View Products - يروح لصفحة منتجات هذه الفئة -->
+            <a [routerLink]="['/categories', category.id, 'products']" class="btn btn-primary mb-2">
+              <i class="fas fa-box me-1"></i>{{ 'view all products' | capitalize:true }} ({{ category.products.length }})
+            </a>
+            
+            <!-- Edit -->
+            <button class="btn btn-warning mb-2" (click)="editCategory(category)">
+              <i class="fas fa-edit me-1"></i>{{ 'edit' | capitalize }}
+            </button>
+            
+            <!-- Delete -->
+            <button class="btn btn-danger" (click)="deleteCategory(category)">
+              <i class="fas fa-trash me-1"></i>{{ 'delete' | capitalize }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

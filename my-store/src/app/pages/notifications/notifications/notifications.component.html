@@ -1,0 +1,256 @@
+<div class="container mt-4">
+  <!-- Header -->
+  <nav class="navbar navbar-light bg-light mb-4">
+    <div class="container-fluid">
+      <div class="d-flex align-items-center">
+        <a class="navbar-brand me-4" routerLink="/dashboard">
+          <i class="fas fa-arrow-left me-2"></i> Dashboard
+        </a>
+        <h4 class="mb-0">Notifications</h4>
+        <span *ngIf="unreadCount > 0" class="badge bg-danger ms-3">
+          {{ unreadCount }} unread
+        </span>
+      </div>
+      
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-primary btn-sm" 
+                (click)="markAllAsRead()"
+                [disabled]="unreadCount === 0">
+          <i class="fas fa-check-double me-2"></i>
+          Mark All Read
+        </button>
+        <button class="btn btn-outline-danger btn-sm" 
+                (click)="clearAll()"
+                [disabled]="notifications.length === 0">
+          <i class="fas fa-trash me-2"></i>
+          Clear All
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2">Loading notifications...</p>
+  </div>
+
+  <div *ngIf="!loading" class="row">
+    <div class="col-lg-8">
+      <!-- Filters -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="btn-group" role="group">
+            <button type="button" 
+                    class="btn btn-outline-primary"
+                    [class.active]="filter === 'all'"
+                    (click)="setFilter('all')">
+              All ({{ notifications.length }})
+            </button>
+            <button type="button" 
+                    class="btn btn-outline-primary"
+                    [class.active]="filter === 'unread'"
+                    (click)="setFilter('unread')">
+              Unread ({{ unreadCount }})
+            </button>
+          </div>
+          
+          <div class="btn-group ms-3" role="group">
+            <button type="button" 
+                    class="btn btn-outline-secondary btn-sm"
+                    (click)="setTypeFilter('')"
+                    [class.active]="typeFilter === ''">
+              All Types
+            </button>
+            <button *ngFor="let type of notificationTypes" 
+                    type="button" 
+                    class="btn btn-outline-secondary btn-sm"
+                    (click)="setTypeFilter(type.value)"
+                    [class.active]="typeFilter === type.value">
+              <i [ngClass]="type.icon" [ngStyle]="{color: type.color}"></i>
+              {{ type.label }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notifications List -->
+      <div class="notifications-list">
+        <!-- Empty State -->
+        <div *ngIf="filteredNotifications.length === 0" class="text-center py-5">
+          <i class="fas fa-bell-slash display-1 text-muted mb-3"></i>
+          <h4>No notifications found</h4>
+          <p class="text-muted">
+            {{ filter === 'unread' ? 'You have no unread notifications' : 'You have no notifications' }}
+          </p>
+        </div>
+
+        <!-- Notifications -->
+        <div *ngFor="let notification of filteredNotifications" 
+             class="card mb-3"
+             [class.border-primary]="!notification.read"
+             [class.bg-light]="notification.read">
+          
+          <div class="card-body">
+            <div class="d-flex">
+              <!-- Notification Icon -->
+              <div class="notification-icon me-3">
+                <div class="icon-circle" [ngStyle]="{backgroundColor: getTypeColor(notification.type)}">
+                  <i class="fas text-white" [ngClass]="getTypeIcon(notification.type)"></i>
+                </div>
+              </div>
+              
+              <!-- Notification Content -->
+              <div class="flex-grow-1">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <div>
+                    <h6 class="mb-1">
+                      {{ notification.title }}
+                      <span *ngIf="!notification.read" class="badge bg-primary ms-2">New</span>
+                    </h6>
+                    <small class="text-muted">
+                      <i class="far fa-clock me-1"></i>
+                      {{ notification.date | date:'medium' }}
+                    </small>
+                  </div>
+                  
+                  <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" 
+                            type="button"
+                            data-bs-toggle="dropdown">
+                      <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                      <li *ngIf="!notification.read">
+                        <a class="dropdown-item" (click)="markAsRead(notification.id)">
+                          <i class="fas fa-check me-2"></i> Mark as Read
+                        </a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item" (click)="performAction(notification)">
+                          <i class="fas fa-external-link-alt me-2"></i> View Details
+                        </a>
+                      </li>
+                      <li>
+                        <hr class="dropdown-divider">
+                      </li>
+                      <li>
+                        <a class="dropdown-item text-danger" (click)="deleteNotification(notification.id)">
+                          <i class="fas fa-trash me-2"></i> Delete
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                
+                <p class="card-text mb-3">{{ notification.message }}</p>
+                
+                <!-- Action Buttons -->
+                <div *ngIf="notification.action" class="action-buttons">
+                  <button class="btn btn-sm" 
+                          [ngClass]="'btn-' + getActionButtonClass(notification.action.type)"
+                          (click)="performAction(notification)">
+                    <i [ngClass]="getActionIcon(notification.action.type)" class="me-2"></i>
+                    {{ getActionLabel(notification.action.type) }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+      <!-- Notification Settings -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title mb-3">
+            <i class="fas fa-cog me-2"></i> Notification Settings
+          </h5>
+          
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" id="emailNotifications" checked>
+            <label class="form-check-label" for="emailNotifications">
+              Email Notifications
+            </label>
+          </div>
+          
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" id="pushNotifications" checked>
+            <label class="form-check-label" for="pushNotifications">
+              Push Notifications
+            </label>
+          </div>
+          
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" id="orderUpdates" checked>
+            <label class="form-check-label" for="orderUpdates">
+              Order Updates
+            </label>
+          </div>
+          
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" id="promotional" checked>
+            <label class="form-check-label" for="promotional">
+              Promotional Offers
+            </label>
+          </div>
+          
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="securityAlerts" checked>
+            <label class="form-check-label" for="securityAlerts">
+              Security Alerts
+            </label>
+          </div>
+          
+          <hr class="my-3">
+          
+          <button class="btn btn-outline-primary w-100">
+            <i class="fas fa-save me-2"></i> Save Settings
+          </button>
+        </div>
+      </div>
+
+      <!-- Statistics -->
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title mb-3">
+            <i class="fas fa-chart-bar me-2"></i> Statistics
+          </h5>
+          
+          <div class="mb-3">
+            <p class="small text-muted mb-1">Total Notifications</p>
+            <h3 class="mb-0">{{ notifications.length }}</h3>
+          </div>
+          
+          <div class="mb-3">
+            <p class="small text-muted mb-1">Unread</p>
+            <h3 class="mb-0 text-primary">{{ unreadCount }}</h3>
+          </div>
+          
+          <div class="mb-3">
+            <p class="small text-muted mb-1">Read Rate</p>
+            <div class="d-flex align-items-center">
+              <div class="progress flex-grow-1 me-3" style="height: 8px;">
+                <div class="progress-bar" 
+                     [style.width]="((notifications.length - unreadCount) / notifications.length * 100) + '%'">
+                </div>
+              </div>
+              <span class="small fw-bold">
+                {{ ((notifications.length - unreadCount) / notifications.length * 100) | number:'1.0-0' }}%
+              </span>
+            </div>
+          </div>
+          
+          <div class="mb-0">
+            <p class="small text-muted mb-1">Last Updated</p>
+            <p class="mb-0">{{ lastUpdated | date:'short' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

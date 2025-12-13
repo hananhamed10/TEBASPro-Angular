@@ -1,0 +1,102 @@
+<div class="container mt-4">
+  <!-- Header -->
+  <nav class="navbar navbar-light bg-light mb-4">
+    <div class="container-fluid">
+      <a class="navbar-brand" routerLink="/products">
+        <i class="fas fa-arrow-left me-2"></i> Back
+      </a>
+      <h4 class="mb-0">Product Reviews</h4>
+    </div>
+  </nav>
+
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2">Loading reviews...</p>
+  </div>
+
+  <div *ngIf="!loading" class="reviews-container">
+    <!-- Rating Summary -->
+    <div class="card mb-4">
+      <div class="card-body text-center">
+        <h1 class="display-4 fw-bold text-primary">{{ averageRating.toFixed(1) }}</h1>
+        <div class="stars mb-2">
+          <i *ngFor="let star of [1,2,3,4,5]" 
+             class="fas fa-star" 
+             [class.text-warning]="star <= averageRating"
+             [class.text-muted]="star > averageRating">
+          </i>
+        </div>
+        <p class="text-muted">{{ reviews.length }} reviews</p>
+      </div>
+    </div>
+
+    <!-- Filter -->
+    <div class="mb-4">
+      <div class="btn-group" role="group">
+        <button type="button" 
+                class="btn btn-outline-primary" 
+                (click)="loadReviews()"
+                [class.active]="!selectedRating">
+          All
+        </button>
+        <button *ngFor="let rating of [5,4,3,2,1]" 
+                type="button" 
+                class="btn btn-outline-primary"
+                (click)="filterByRating(rating)"
+                [class.active]="selectedRating === rating">
+          {{ rating }} Stars
+        </button>
+      </div>
+    </div>
+
+    <!-- Reviews List -->
+    <div class="reviews-list">
+      <div *ngFor="let review of reviews" class="card mb-3">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div class="d-flex align-items-center">
+              <img [src]="review.user.avatar || 'assets/images/avatar.jpg'" 
+                   class="rounded-circle me-3" 
+                   width="50" 
+                   height="50"
+                   alt="User avatar">
+              <div>
+                <h6 class="mb-1">{{ review.user.name }}</h6>
+                <div class="stars">
+                  <i *ngFor="let star of [1,2,3,4,5]" 
+                     class="fas fa-star" 
+                     [class.text-warning]="star <= review.rating"
+                     [class.text-muted]="star > review.rating"
+                     style="font-size: 12px;">
+                  </i>
+                </div>
+              </div>
+            </div>
+            <small class="text-muted">{{ review.date | date:'mediumDate' }}</small>
+          </div>
+          
+          <h6 class="fw-bold">{{ review.title }}</h6>
+          <p class="card-text">{{ review.comment }}</p>
+          
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <span *ngIf="review.verified" class="badge bg-success">
+              <i class="fas fa-check-circle me-1"></i> Verified Purchase
+            </span>
+            <button class="btn btn-sm btn-outline-primary">
+              <i class="fas fa-thumbs-up me-1"></i> Helpful ({{ review.helpful || 0 }})
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Write Review Button -->
+    <div class="text-center mt-4">
+      <button class="btn btn-primary" routerLink="/write-review">
+        <i class="fas fa-edit me-2"></i> Write a Review
+      </button>
+    </div>
+  </div>
+</div>

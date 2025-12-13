@@ -1,0 +1,374 @@
+<div class="container py-5">
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+      <li class="breadcrumb-item"><a routerLink="/products">Products</a></li>
+      <li class="breadcrumb-item">
+        <a [routerLink]="['/category', product?.categoryId]">{{ categoryName }}</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">{{ product?.name }}</li>
+    </ol>
+  </nav>
+
+  @if (product) {
+    <div class="row">
+      <!-- الصور -->
+      <div class="col-lg-6">
+        <!-- الصورة الرئيسية -->
+        <div class="card border-0 shadow-sm mb-3">
+          <img [src]="product.image" 
+               [alt]="product.name" 
+               class="img-fluid rounded"
+               style="max-height: 500px; object-fit: contain;">
+        </div>
+
+        <!-- الصور المصغرة -->
+        @if (productImages.length > 0) {
+          <div class="row g-2">
+            @for (img of productImages; track img; let i = $index) {
+              <div class="col-3">
+                <img [src]="img" 
+                     [alt]="product.name + ' ' + (i + 1)"
+                     class="img-thumbnail"
+                     (click)="product.image = img"
+                     [class.border-primary]="product.image === img"
+                     style="height: 80px; object-fit: cover; cursor: pointer;">
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- التفاصيل -->
+      <div class="col-lg-6">
+        <!-- العنوان -->
+        <h1 class="mb-2">{{ product.name }}</h1>
+        
+        <!-- التقييم والمراجعات -->
+        <div class="d-flex align-items-center mb-3">
+          <div class="text-warning me-2">
+            @for (star of [1,2,3,4,5]; track star) {
+              <i class="{{ getSimpleStarClass(product.rating || 0, star) }}"></i>
+            }
+          </div>
+          <span class="text-muted me-3">({{ product.rating || 0 }}/5)</span>
+          
+          <button class="btn btn-link btn-sm text-decoration-none" (click)="writeReview()">
+            <i class="fas fa-edit me-1"></i>Write a Review
+          </button>
+        </div>
+
+        <!-- السعر -->
+        <div class="mb-4">
+          <span class="h2 text-primary">{{ product.price | currency:'EGP ':'symbol':'1.0-0' }}</span>
+          
+          @if (product.originalPrice) {
+            <span class="text-muted text-decoration-line-through ms-2">
+              {{ product.originalPrice | currency:'EGP ':'symbol':'1.0-0' }}
+            </span>
+            <span class="badge bg-danger ms-2">
+              Save {{ getDiscountPercentage() }}%
+            </span>
+          }
+        </div>
+
+        <!-- الوصف -->
+        <div class="mb-4">
+          <h5 class="mb-2">Description</h5>
+          <p class="text-muted">{{ product.description }}</p>
+        </div>
+
+        <!-- الألوان -->
+        @if (product.colors && product.colors.length > 0) {
+          <div class="mb-4">
+            <h6 class="mb-3">
+              <strong>Color:</strong> 
+              <span class="ms-2">{{ selectedColor || product.colors[0] }}</span>
+            </h6>
+            <div class="d-flex flex-wrap gap-2">
+              @for (color of product.colors; track color) {
+                <button type="button" 
+                        class="btn btn-outline-secondary btn-sm"
+                        [class.btn-primary]="selectedColor === color"
+                        (click)="selectColor(color)">
+                  {{ color }}
+                </button>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- المقاسات -->
+        @if (product.sizes && product.sizes.length > 0) {
+          <div class="mb-4">
+            <h6 class="mb-3">
+              <strong>Size:</strong> 
+              <span class="ms-2">{{ selectedSize || product.sizes[0] }}</span>
+            </h6>
+            <div class="d-flex flex-wrap gap-2">
+              @for (size of product.sizes; track size) {
+                <button type="button" 
+                        class="btn btn-outline-secondary btn-sm"
+                        [class.btn-primary]="selectedSize === size"
+                        (click)="selectSize(size)">
+                  {{ size }}
+                </button>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- الكمية والمخزون -->
+        <div class="mb-4">
+          <div class="row align-items-center">
+            <div class="col-md-6 mb-3 mb-md-0">
+              <h6 class="mb-3"><strong>Quantity</strong></h6>
+              <div class="d-flex align-items-center">
+                <button class="btn btn-outline-secondary" 
+                        (click)="decreaseQuantity()"
+                        [disabled]="quantity <= 1">
+                  <i class="fas fa-minus"></i>
+                </button>
+                <span class="mx-3 fw-bold" style="width: 70px; text-align: center;">{{ quantity }}</span>
+                <button class="btn btn-outline-secondary" 
+                        (click)="increaseQuantity()"
+                        [disabled]="quantity >= getAvailableStock()">
+                  <i class="fas fa-plus"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="d-flex align-items-center mb-2">
+                <span class="badge me-2" 
+                      [ngClass]="{
+                        'bg-success': getAvailableStock() > 10,
+                        'bg-warning': getAvailableStock() > 0 && getAvailableStock() <= 10,
+                        'bg-danger': getAvailableStock() === 0
+                      }">
+                  @if (getAvailableStock() > 10) {
+                    <i class="fas fa-check-circle me-1"></i>In Stock
+                  } @else if (getAvailableStock() > 0) {
+                    <i class="fas fa-exclamation-triangle me-1"></i>Only {{ getAvailableStock() }} left
+                  } @else {
+                    <i class="fas fa-times-circle me-1"></i>Out of Stock
+                  }
+                </span>
+                
+                @if (inCartQuantity > 0) {
+                  <small class="text-muted">
+                    <i class="fas fa-shopping-cart ms-2 me-1"></i>{{ inCartQuantity }} in cart
+                  </small>
+                }
+              </div>
+              
+              @if (getAvailableStock() <= 10 && getAvailableStock() > 0) {
+                <small class="text-warning d-block">
+                  <i class="fas fa-exclamation-triangle"></i> 
+                  Low stock - Order soon!
+                </small>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- الأزرار الرئيسية -->
+        <div class="d-flex gap-3 mb-4">
+          <!-- زر إضافة للعربة -->
+          <button class="btn btn-primary btn-lg flex-grow-1"
+                  (click)="addToCart()"
+                  [disabled]="getAvailableStock() === 0">
+            @if (inCartQuantity > 0) {
+              <i class="fas fa-cart-plus me-2"></i>
+              Add More ({{ inCartQuantity }} in cart)
+            } @else {
+              <i class="fas fa-shopping-cart me-2"></i>
+              Add to Cart
+            }
+          </button>
+
+          <!-- زر المفضلة -->
+          <button class="btn btn-outline-danger btn-lg" 
+                  (click)="toggleWishlist()"
+                  [title]="isInWishlist ? 'Remove from wishlist' : 'Add to wishlist'"
+                  [class.btn-danger]="isInWishlist">
+            <i class="fas" [ngClass]="isInWishlist ? 'fa-heart' : 'far fa-heart'"></i>
+          </button>
+
+          <!-- زر المشاركة -->
+          <button class="btn btn-outline-secondary btn-lg" 
+                  (click)="shareProduct()"
+                  title="Share product">
+            <i class="fas fa-share-alt"></i>
+          </button>
+        </div>
+
+        <!-- زر الشراء المباشر -->
+        <button class="btn btn-success btn-lg w-100 mb-4"
+                (click)="buyNow()"
+                [disabled]="getAvailableStock() === 0">
+          <i class="fas fa-bolt me-2"></i>
+          Buy Now
+        </button>
+
+        <!-- معلومات المنتج -->
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <div class="card border-0 shadow-sm h-100">
+              <div class="card-body">
+                <h5 class="card-title mb-3">Product Details</h5>
+                <ul class="list-unstyled mb-0">
+                  <li class="mb-2">
+                    <strong>Category:</strong> {{ categoryName }}
+                  </li>
+                  <li class="mb-2">
+                    <strong>SKU:</strong> PROD-{{ product.id ? product.id.toString().padStart(5, '0') : '00000' }}
+                  </li>
+                  <li class="mb-2">
+                    <strong>Availability:</strong> 
+                    <span [ngClass]="getStockClass()">
+                      {{ product.stock || 0 }} units
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6">
+            @if (productFeatures.length > 0) {
+              <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                  <h5 class="card-title mb-3">Key Features</h5>
+                  <ul class="list-unstyled">
+                    @for (feature of productFeatures; track feature; let i = $index) {
+                      <li class="mb-2">
+                        <i class="fas fa-check text-success me-2"></i>
+                        {{ feature }}
+                      </li>
+                    }
+                  </ul>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- معلومات التوصيل والعائدات -->
+        <div class="card border-0 shadow-sm mb-5">
+          <div class="card-body">
+            <div class="row text-center">
+              <div class="col-6 col-md-3 mb-3">
+                <div class="p-3">
+                  <i class="fas fa-shipping-fast text-primary fs-3 mb-2"></i>
+                  <h6 class="mb-1">Free Shipping</h6>
+                  <small class="text-muted">Orders over 100 EGP</small>
+                </div>
+              </div>
+              <div class="col-6 col-md-3 mb-3">
+                <div class="p-3">
+                  <i class="fas fa-undo text-primary fs-3 mb-2"></i>
+                  <h6 class="mb-1">30-Day Returns</h6>
+                  <small class="text-muted">Easy returns</small>
+                </div>
+              </div>
+              <div class="col-6 col-md-3 mb-3">
+                <div class="p-3">
+                  <i class="fas fa-shield-alt text-primary fs-3 mb-2"></i>
+                  <h6 class="mb-1">Secure Payment</h6>
+                  <small class="text-muted">100% secure</small>
+                </div>
+              </div>
+              <div class="col-6 col-md-3 mb-3">
+                <div class="p-3">
+                  <i class="fas fa-headset text-primary fs-3 mb-2"></i>
+                  <h6 class="mb-1">24/7 Support</h6>
+                  <small class="text-muted">Always here</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- المنتجات ذات الصلة -->
+    @if (relatedProducts.length > 0) {
+      <div class="mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3 class="mb-0">Related Products</h3>
+         <a [routerLink]="['/category', product.categoryId]" class="btn btn-outline-primary">
+            View All in {{ categoryName }}
+          </a>
+        </div>
+        <div class="row">
+          @for (relatedProduct of relatedProducts; track relatedProduct.id) {
+            <div class="col-md-3 mb-4">
+              <div class="card h-100 border-0 shadow-sm hover-shadow">
+                <div class="position-relative">
+                  <img [src]="relatedProduct.image" 
+                       [alt]="relatedProduct.name"
+                       class="card-img-top"
+                       style="height: 200px; object-fit: cover;">
+                  @if (relatedProduct.originalPrice) {
+                    <span class="badge bg-danger position-absolute top-0 start-0 m-2">
+                      Sale
+                    </span>
+                  }
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title fs-6">{{ relatedProduct.name }}</h5>
+                  
+                  <div class="d-flex align-items-center mb-2">
+                    <div class="text-warning me-2 small">
+                      @for (star of [1,2,3,4,5]; track star) {
+                        <i class="{{ getSimpleStarClass(relatedProduct.rating || 0, star) }}"></i>
+                      }
+                    </div>
+                    <small class="text-muted">({{ relatedProduct.rating || 0 }})</small>
+                  </div>
+                  
+                  <div class="mb-3">
+                    <span class="h5 text-primary">{{ relatedProduct.price | currency:'EGP ':'symbol':'1.0-0' }}</span>
+                    @if (relatedProduct.originalPrice) {
+                      <small class="text-muted text-decoration-line-through ms-1">
+                        {{ relatedProduct.originalPrice | currency:'EGP ':'symbol':'1.0-0' }}
+                      </small>
+                    }
+                  </div>
+                  
+                  <div class="d-grid gap-2">
+                    <a [routerLink]="['/products', relatedProduct.id]" 
+                       class="btn btn-outline-primary">
+                      View Details
+                    </a>
+                    <button class="btn btn-outline-secondary btn-sm"
+                            (click)="addToCartFromRelated(relatedProduct)">
+                      <i class="fas fa-cart-plus me-1"></i>Add to Cart
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  } @else {
+    <!-- حالة عدم وجود المنتج -->
+    <div class="text-center py-5">
+      <i class="fas fa-box-open fa-4x text-muted mb-3"></i>
+      <h3 class="text-muted">Product Not Found</h3>
+      <p class="text-muted mb-4">The product you're looking for doesn't exist or has been removed</p>
+      <div class="d-flex justify-content-center gap-3">
+        <a routerLink="/products" class="btn btn-primary">
+          <i class="fas fa-shopping-bag me-2"></i>Browse Products
+        </a>
+        <a routerLink="/" class="btn btn-outline-secondary">
+          <i class="fas fa-home me-2"></i>Go Home
+        </a>
+      </div>
+    </div>
+  }
+</div>

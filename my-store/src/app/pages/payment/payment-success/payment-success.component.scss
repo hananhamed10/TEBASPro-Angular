@@ -1,0 +1,53 @@
+.success-icon {
+  .icon-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    animation: successPulse 2s infinite;
+  }
+}
+
+@keyframes successPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 20px rgba(25, 135, 84, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(25, 135, 84, 0);
+  }
+}
+
+.order-details {
+  .card {
+    border-color: #dee2e6;
+    
+    .card-body {
+      background: #f8f9fa;
+    }
+  }
+}
+
+.step-number {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.action-buttons {
+  .btn {
+    padding: 12px 24px;
+    font-weight: 500;
+  }
+}
+
+code {
+  background: #f8f9fa;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+}

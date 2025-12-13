@@ -1,0 +1,248 @@
+<div class="container mt-4">
+  <!-- Header -->
+  <nav class="navbar navbar-light bg-light mb-4">
+    <div class="container-fluid">
+      <a class="navbar-brand" routerLink="/profile">
+        <i class="fas fa-arrow-left me-2"></i> Back to Profile
+      </a>
+      <h4 class="mb-0">Payment Methods</h4>
+    </div>
+  </nav>
+
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2">Loading payment methods...</p>
+  </div>
+
+  <div *ngIf="!loading" class="row">
+    <div class="col-lg-8">
+      <!-- Saved Payment Methods -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="card-title mb-0">Saved Payment Methods</h5>
+            <button class="btn btn-primary btn-sm" (click)="showAddMethodModal = true">
+              <i class="fas fa-plus me-2"></i> Add New
+            </button>
+          </div>
+          
+          <!-- Empty State -->
+          <div *ngIf="methods.length === 0" class="text-center py-4">
+            <i class="fas fa-credit-card display-1 text-muted mb-3"></i>
+            <h5>No payment methods saved</h5>
+            <p class="text-muted">Add a payment method to make checkout faster</p>
+            <button class="btn btn-primary" (click)="showAddMethodModal = true">
+              <i class="fas fa-plus me-2"></i> Add Payment Method
+            </button>
+          </div>
+          
+          <!-- Methods List -->
+          <div *ngIf="methods.length > 0" class="list-group">
+            <div *ngFor="let method of methods" 
+                 class="list-group-item list-group-item-action"
+                 [class.bg-light]="method.isDefault">
+              
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                  <div class="method-icon me-3">
+                    <i class="fas fa-2x" 
+                       [ngClass]="getMethodIcon(method.type)"
+                       [ngStyle]="{color: getMethodColor(method.type)}">
+                    </i>
+                  </div>
+                  
+                  <div>
+                    <h6 class="mb-1">
+                      {{ getMethodDisplayName(method.type) }}
+                      <span *ngIf="method.isDefault" class="badge bg-success ms-2">
+                        Default
+                      </span>
+                    </h6>
+                    <p class="mb-1 text-muted small">{{ method.details }}</p>
+                    <p *ngIf="method.expires" class="mb-0 text-muted small">
+                      Expires: {{ method.expires }}
+                    </p>
+                  </div>
+                </div>
+                
+                <div class="dropdown">
+                  <button class="btn btn-outline-secondary btn-sm dropdown-toggle" 
+                          type="button"
+                          data-bs-toggle="dropdown">
+                    Actions
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li *ngIf="!method.isDefault">
+                      <a class="dropdown-item" (click)="setDefault(method.id)">
+                        <i class="fas fa-check-circle me-2"></i> Set as Default
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" (click)="editMethod(method)">
+                        <i class="fas fa-edit me-2"></i> Edit
+                      </a>
+                    </li>
+                    <li>
+                      <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                      <a class="dropdown-item text-danger" (click)="deleteMethod(method.id)">
+                        <i class="fas fa-trash me-2"></i> Delete
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Security Info -->
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title mb-3">
+            <i class="fas fa-shield-alt me-2 text-success"></i> Security Information
+          </h5>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="d-flex align-items-start mb-3">
+                <i class="fas fa-lock text-primary me-3 mt-1"></i>
+                <div>
+                  <h6 class="mb-1">Secure Storage</h6>
+                  <p class="small text-muted mb-0">
+                    Your payment information is securely stored and encrypted
+                  </p>
+                </div>
+              </div>
+              
+              <div class="d-flex align-items-start mb-3">
+                <i class="fas fa-user-shield text-info me-3 mt-1"></i>
+                <div>
+                  <h6 class="mb-1">PCI Compliant</h6>
+                  <p class="small text-muted mb-0">
+                    We are PCI DSS compliant for secure transactions
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="d-flex align-items-start mb-3">
+                <i class="fas fa-bell text-warning me-3 mt-1"></i>
+                <div>
+                  <h6 class="mb-1">Transaction Alerts</h6>
+                  <p class="small text-muted mb-0">
+                    Get notified for all transactions made with your cards
+                  </p>
+                </div>
+              </div>
+              
+              <div class="d-flex align-items-start">
+                <i class="fas fa-headset text-secondary me-3 mt-1"></i>
+                <div>
+                  <h6 class="mb-1">24/7 Support</h6>
+                  <p class="small text-muted mb-0">
+                    Contact support if you notice any unauthorized transactions
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+      <!-- Payment Stats -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title mb-3">Payment Statistics</h5>
+          
+          <div class="mb-3">
+            <p class="small text-muted mb-1">Total Payment Methods</p>
+            <h3 class="mb-0">{{ methods.length }}</h3>
+          </div>
+          
+          <div class="mb-3">
+            <p class="small text-muted mb-1">Default Method</p>
+            <div *ngIf="getDefaultMethod()" class="d-flex align-items-center">
+              <i class="fas me-2" 
+                 [ngClass]="getMethodIcon(getDefaultMethod().type)"
+                 [ngStyle]="{color: getMethodColor(getDefaultMethod().type)}">
+              </i>
+              <span>{{ getDefaultMethod().details }}</span>
+            </div>
+            <p *ngIf="!getDefaultMethod()" class="text-muted small mb-0">
+              No default method set
+            </p>
+          </div>
+          
+          <div class="mb-3">
+            <p class="small text-muted mb-1">Last Updated</p>
+            <p class="mb-0">{{ lastUpdated | date:'mediumDate' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title mb-3">Quick Actions</h5>
+          
+          <div class="d-grid gap-2">
+            <button class="btn btn-outline-primary" (click)="showAddMethodModal = true">
+              <i class="fas fa-credit-card me-2"></i> Add New Card
+            </button>
+            
+            <button class="btn btn-outline-secondary" routerLink="/orders">
+              <i class="fas fa-receipt me-2"></i> View Order History
+            </button>
+            
+            <button class="btn btn-outline-info" routerLink="/profile">
+              <i class="fas fa-user-cog me-2"></i> Account Settings
+            </button>
+            
+            <button class="btn btn-outline-warning" (click)="contactSupport()">
+              <i class="fas fa-headset me-2"></i> Contact Support
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Method Modal -->
+  <div *ngIf="showAddMethodModal" class="modal-backdrop show" style="z-index: 1040;"></div>
+  <div *ngIf="showAddMethodModal" class="modal show d-block" style="z-index: 1050;">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Payment Method</h5>
+          <button type="button" class="btn-close" (click)="showAddMethodModal = false"></button>
+        </div>
+        
+        <div class="modal-body">
+          <!-- Payment Method Form will go here -->
+          <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>
+            Payment method functionality is in development
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="showAddMethodModal = false">
+            Cancel
+          </button>
+          <button type="button" class="btn btn-primary" (click)="saveNewMethod()">
+            Save Payment Method
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

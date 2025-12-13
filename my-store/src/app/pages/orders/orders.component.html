@@ -1,0 +1,40 @@
+<!-- <div class="container mt-4">
+  <div class="card">
+    <div class="card-header">
+      <h4>My Orders</h4>
+    </div>
+    <div class="card-body">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Date</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of orders">
+            <td>#{{ order.id }}</td>
+            <td>{{ order.date | date }}</td>
+            <td>{{ order.total | currency }}</td>
+            <td>
+              <span class="badge" [ngClass]="{
+                'bg-success': order.status === 'completed',
+                'bg-warning': order.status === 'processing',
+                'bg-info': order.status === 'shipped'
+              }">{{ order.status }}</span>
+            </td>
+            <td>
+              <!-- الرابط لتفاصيل الطلب -->
+              <!-- <a [routerLink]="['/orders', order.id]" class="btn btn-sm btn-outline-primary">
+                <i class="fas fa-eye me-1"></i>View Details
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div> --> -->

@@ -1,0 +1,93 @@
+<div class="container mt-4">
+  <div class="row mb-4">
+    <div class="col-12">
+      <h1 class="text-primary">{{ 'all products' | capitalize:true }}</h1>
+      <p class="text-muted">{{ 'browse our complete product collection' | uppercaseFirst }}</p>
+      <div class="d-flex align-items-center">
+        <span class="badge bg-primary me-3">{{ products.length }} {{ 'products' | capitalize }}</span>
+        <a routerLink="/categories" class="btn btn-outline-primary btn-sm">
+          <i class="fas fa-folder me-1"></i>
+          {{ 'view by categories' | capitalize:true }}
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 col-lg-4 col-xl-3 mb-4" *ngFor="let product of products">
+      <div class="card product-card h-100 shadow-sm">
+        <!-- Product Image -->
+        <div class="position-relative">
+          <img [src]="product.image" [alt]="product.name" 
+               class="card-img-top" style="height: 250px; object-fit: cover;">
+          <div class="position-absolute top-0 start-0 m-2">
+            <span class="badge bg-info">{{ product.categoryName | uppercaseFirst }}</span>
+          </div>
+          <div class="position-absolute top-0 end-0 m-2">
+            <span class="badge" [ngClass]="product.inStock ? 'bg-success' : 'bg-danger'">
+              {{ product.inStock ? 'In Stock' : 'Out of Stock' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="card-body d-flex flex-column">
+          <!-- Product Info -->
+          <h5 class="card-title">{{ product.name | uppercaseFirst }}</h5>
+          
+          <!-- Rating -->
+          <div class="rating mb-2">
+            <i class="fas fa-star text-warning" *ngFor="let star of [1,2,3,4,5]"
+               [class.text-muted]="star > product.rating"></i>
+            <small class="text-muted ms-1">({{ product.rating }})</small>
+          </div>
+
+          <!-- Description -->
+          <p class="card-text text-muted flex-grow-1">
+            {{ product.description | truncate:100 }}
+          </p>
+
+          <!-- Category -->
+          <div class="mb-2">
+            <small class="text-muted">
+              <i class="fas fa-tag me-1"></i>
+              {{ product.category | uppercaseFirst }}
+            </small>
+          </div>
+
+          <!-- Price -->
+          <div class="mb-3">
+            <span class="h4 text-primary">{{ product.price | customCurrency:'USD' }}</span>
+            @if (product.originalPrice && product.originalPrice > product.price) {
+              <small class="text-muted text-decoration-line-through ms-2">
+                {{ product.originalPrice | customCurrency:'USD' }}
+              </small>
+            }
+          </div>
+
+          <!-- Actions -->
+          <div class="btn-group w-100">
+            <a [routerLink]="['/products', product.id]" class="btn btn-outline-primary flex-fill">
+              <i class="fas fa-eye me-2"></i>
+              {{ 'view details' | capitalize:true }}
+            </a>
+            <button class="btn btn-primary" 
+                    (click)="addToCart(product)"
+                    [disabled]="!product.inStock">
+              <i class="fas fa-cart-plus"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="products.length === 0" class="text-center py-5">
+    <i class="fas fa-box-open fa-4x text-muted mb-3"></i>
+    <h3 class="text-muted">{{ 'no products found' | capitalize:true }}</h3>
+    <p class="text-muted">{{ 'there are no products available yet' | uppercaseFirst }}</p>
+    <a routerLink="/categories" class="btn btn-primary">
+      {{ 'browse categories' | capitalize:true }}
+    </a>
+  </div>
+</div>

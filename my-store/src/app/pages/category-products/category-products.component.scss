@@ -1,0 +1,36 @@
+.product-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: none;
+  border-radius: 12px;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+}
+
+.product-card .card-img-top {
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.rating {
+  color: #ffc107;
+}
+
+.breadcrumb {
+  background-color: transparent;
+  padding: 0;
+}
+
+.breadcrumb-item a {
+  color: #6c757d;
+}
+
+.breadcrumb-item.active {
+  color: #007bff;
+}
+
+.btn-group .btn {
+  border-radius: 8px;
+}

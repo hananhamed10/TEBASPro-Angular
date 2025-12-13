@@ -1,0 +1,195 @@
+<div class="container mt-4">
+  <!-- Header -->
+  <nav class="navbar navbar-light bg-light mb-4">
+    <div class="container-fluid">
+      <a class="navbar-brand" routerLink="/orders">
+        <i class="fas fa-arrow-left me-2"></i> Back to Orders
+      </a>
+      <h4 class="mb-0">Track Shipment</h4>
+    </div>
+  </nav>
+
+  <!-- Tracking Input -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title mb-3">Track Your Package</h5>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="input-group">
+            <input type="text" 
+                   class="form-control" 
+                   placeholder="Enter tracking number"
+                   [(ngModel)]="trackingNumber"
+                   (keyup.enter)="trackShipment()">
+            <button class="btn btn-primary" 
+                    (click)="trackShipment()"
+                    [disabled]="!trackingNumber || loading">
+              <i class="fas fa-search me-2"></i>
+              Track
+            </button>
+          </div>
+          <small class="text-muted mt-2 d-block">
+            Enter your tracking number to see the latest status
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2">Tracking shipment...</p>
+  </div>
+
+  <!-- Tracking Results -->
+  <div *ngIf="!loading && shipment" class="tracking-results">
+    <!-- Shipment Info -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <h5 class="mb-3">Shipment Details</h5>
+            <table class="table table-sm">
+              <tr>
+                <th style="width: 40%">Tracking Number:</th>
+                <td>{{ shipment.trackingNumber }}</td>
+              </tr>
+              <tr>
+                <th>Status:</th>
+                <td>
+                  <span class="badge" [ngClass]="'bg-' + getStatusColor(shipment.status)">
+                    {{ shipment.status | titlecase }}
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <th>Carrier:</th>
+                <td>{{ shipment.carrier }}</td>
+              </tr>
+              <tr>
+                <th>Service:</th>
+                <td>{{ shipment.service }}</td>
+              </tr>
+            </table>
+          </div>
+          
+          <div class="col-md-6">
+            <h5 class="mb-3">Delivery Information</h5>
+            <table class="table table-sm">
+              <tr>
+                <th style="width: 40%">Estimated Delivery:</th>
+                <td>{{ shipment.estimatedDelivery }}</td>
+              </tr>
+              <tr>
+                <th>Destination:</th>
+                <td>{{ shipment.destination }}</td>
+              </tr>
+              <tr>
+                <th>Weight:</th>
+                <td>{{ shipment.weight }}</td>
+              </tr>
+              <tr>
+                <th>Dimensions:</th>
+                <td>{{ shipment.dimensions }}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tracking Timeline -->
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title mb-4">Tracking History</h5>
+        
+        <div class="timeline">
+          <div *ngFor="let update of shipment.updates; let i = index" 
+               class="timeline-item"
+               [class.completed]="true">
+            
+            <div class="timeline-marker">
+              <i class="fas" 
+                 [ngClass]="getStatusIcon(update.status)"></i>
+            </div>
+            
+            <div class="timeline-content">
+              <div class="d-flex justify-content-between">
+                <h6 class="mb-1">{{ update.status }}</h6>
+                <small class="text-muted">{{ update.date | date:'short' }}</small>
+              </div>
+              
+              <p *ngIf="update.location" class="mb-1 small">
+                <i class="fas fa-map-marker-alt me-1 text-primary"></i>
+                {{ update.location }}
+              </p>
+              
+              <p *ngIf="update.description" class="mb-0 text-muted small">
+                {{ update.description }}
+              </p>
+              
+              <p *ngIf="update.signedBy" class="mb-0 small">
+                <i class="fas fa-signature me-1"></i>
+                Signed by: {{ update.signedBy }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Support Section -->
+    <div class="card mt-4">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Need Help?</h5>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="d-flex align-items-center mb-3">
+              <div class="bg-primary rounded-circle p-3 me-3">
+                <i class="fas fa-phone text-white"></i>
+              </div>
+              <div>
+                <h6 class="mb-1">Contact Carrier</h6>
+                <p class="mb-0 small">Call {{ shipment.carrier }} directly</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6">
+            <div class="d-flex align-items-center mb-3">
+              <div class="bg-success rounded-circle p-3 me-3">
+                <i class="fas fa-headset text-white"></i>
+              </div>
+              <div>
+                <h6 class="mb-1">Customer Support</h6>
+                <p class="mb-0 small">Contact our support team</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="d-flex gap-2 mt-3">
+          <button class="btn btn-outline-primary" (click)="contactCarrier()">
+            <i class="fas fa-phone me-2"></i> Contact Carrier
+          </button>
+          <button class="btn btn-outline-secondary" (click)="contactSupport()">
+            <i class="fas fa-headset me-2"></i> Contact Support
+          </button>
+          <button class="btn btn-outline-info" (click)="downloadLabel()">
+            <i class="fas fa-download me-2"></i> Download Label
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- No Results -->
+  <div *ngIf="!loading && !shipment && trackingNumber" class="text-center py-5">
+    <i class="fas fa-box-open display-1 text-muted mb-3"></i>
+    <h4>No tracking information found</h4>
+    <p class="text-muted">Please check your tracking number and try again</p>
+  </div>
+</div>
