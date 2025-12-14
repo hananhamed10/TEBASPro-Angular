@@ -1,5 +1,6 @@
 {
-  "buildCommand": "npm install --legacy-peer-deps && ng build --configuration production",
+  "installCommand": "npm install --legacy-peer-deps",
+  "buildCommand": "ng build --configuration production",
   "outputDirectory": "dist/my-store",
   "framework": "angular"
 }
