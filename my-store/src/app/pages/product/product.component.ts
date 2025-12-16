@@ -4,8 +4,8 @@ import { CategoryService } from '../../core/services/category.service';
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
-   // ← تأكدي إن ده اسم الملف الصح
-  styleUrls: ['./product.component.scss']  // ← تأكدي إن ده اسم الملف الصح
+
+  styleUrls: ['./product.component.scss']  
 })
 export class ProductComponent implements OnInit {
   products: any[] = [];

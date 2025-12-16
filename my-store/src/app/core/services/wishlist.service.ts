@@ -12,7 +12,7 @@ export interface WishlistResponse {
   success: boolean;
   message?: string;
   data?: any;
-  action?: 'added' | 'removed'; // ✅ إضافة action هنا
+  action?: 'added' | 'removed'; 
 }
 
 @Injectable({
@@ -37,10 +37,9 @@ export class WishlistService {
         
         const items = JSON.parse(wishlistStr);
         
-        // Validate items structure
+     
         const validatedItems = this.validateWishlistItems(items);
         
-        // Simulate network delay
         setTimeout(() => {
           observer.next(validatedItems);
           observer.complete();
@@ -66,7 +65,7 @@ export class WishlistService {
   addToWishlist(product: any): Observable<WishlistResponse> {
     return new Observable<WishlistResponse>(observer => {
       try {
-        // Validate product
+      
         if (!product || !product.id) {
           observer.next({ 
             success: false, 
@@ -411,7 +410,7 @@ export class WishlistService {
     ];
   }
 
-  // For development: Populate with mock data
+ 
   populateMockData(): void {
     if (!localStorage.getItem(this.storageKey)) {
       const mockData = this.getMockWishlist();
@@ -420,7 +419,7 @@ export class WishlistService {
     }
   }
 
-  // Export wishlist data
+ 
   exportWishlist(): string {
     try {
       const wishlist = this.getWishlistFromStorage();
@@ -431,7 +430,7 @@ export class WishlistService {
     }
   }
 
-  // Import wishlist data
+ 
   importWishlist(data: string): Observable<WishlistResponse> {
     return new Observable<WishlistResponse>(observer => {
       try {

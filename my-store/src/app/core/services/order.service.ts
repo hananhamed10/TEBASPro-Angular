@@ -74,7 +74,7 @@ export class OrderService {
   }
 
   private generateInvoiceContent(order: Order): string {
-    // حساب الخصم إذا كان موجوداً
+ 
     const discount = order.discount || 0;
     
     const invoiceData = `
@@ -118,7 +118,7 @@ Thank you for your purchase!
     return invoiceData;
   }
 
-  // ✅ 2. تحسين trackOrder مع الـ interface الجديد
+  
   trackOrder(orderId: string): Observable<TrackingInfo> {
     return new Observable<TrackingInfo>(observer => {
       try {
@@ -231,13 +231,13 @@ Thank you for your purchase!
         const orderId = 'ORD-' + Date.now();
         const orderNumber = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
         
-        // ✅ إصلاح: إنشاء orderItems مع properties كاملة
+     
         const orderItems: OrderItem[] = cartItems.map((item, index) => {
           const product = item.product;
           const quantity = item.quantity || 1;
           const price = product.price || 0;
           
-          // ✅ إصلاح: إنشاء product كامل
+          
           const fullProduct: Product = {
             id: String(product.id),
             name: product.name || 'Product',
@@ -254,11 +254,11 @@ Thank you for your purchase!
             product: fullProduct,
             quantity: quantity,
             price: price,
-            subtotal: price * quantity  // ✅ مضمون ليس undefined
+            subtotal: price * quantity 
           };
         });
 
-        // ✅ إصلاح: حساب القيم
+   
         const subtotal = orderItems.reduce((sum, item) => sum + item.subtotal, 0);
         const shipping = orderData.shipping || this.calculateShipping(subtotal);
         const tax = this.calculateTax(subtotal);
@@ -306,7 +306,7 @@ Thank you for your purchase!
           estimatedDelivery: this.calculateEstimatedDelivery()
         };
         
-        // ✅ إضافة discount فقط إذا كان موجوداً
+        
         if (discount > 0) {
           newOrder.discount = discount;
         }

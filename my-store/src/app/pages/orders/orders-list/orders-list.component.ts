@@ -41,13 +41,13 @@ export class OrdersListPage implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    // Check for success message after checkout
+
     this.route.queryParams.subscribe(params => {
       if (params['success'] === 'true' && params['orderNumber']) {
         this.showSuccessMessage = true;
         this.successOrderNumber = params['orderNumber'];
         
-        // Auto-hide success message after 5 seconds
+   
         setTimeout(() => {
           this.showSuccessMessage = false;
         }, 5000);
@@ -56,7 +56,7 @@ export class OrdersListPage implements OnInit, OnDestroy {
     
     this.loadOrders();
     
-    // Setup search with debounce
+   
     this.searchControl.valueChanges
       .pipe(
         debounceTime(300),
@@ -127,7 +127,7 @@ export class OrdersListPage implements OnInit, OnDestroy {
     this.currentPage = 1;
   }
 
-  // Pagination methods
+  
   get paginatedOrders(): Order[] {
     const start = (this.currentPage - 1) * this.itemsPerPage;
     return this.filteredOrders.slice(start, start + this.itemsPerPage);
@@ -169,12 +169,12 @@ export class OrdersListPage implements OnInit, OnDestroy {
     return pages;
   }
 
-  // Helper method for Math.min in template
+ 
   getMin(a: number, b: number): number {
     return Math.min(a, b);
   }
 
-  // Status methods
+ 
   getStatusBadgeClass(status: string): string {
     const classes: { [key: string]: string } = {
       'pending': 'bg-warning text-dark',
@@ -260,7 +260,7 @@ export class OrdersListPage implements OnInit, OnDestroy {
     });
   }
 
-  // Helper methods for template
+  
   getOrderTotal(order: Order | null): number {
     if (!order) return 0;
     return order.total || 
@@ -284,14 +284,14 @@ export class OrdersListPage implements OnInit, OnDestroy {
     return `${order.items[0]?.product?.name || 'Product'} + ${order.items.length - 1} more`;
   }
 
-  // Close success message
+
   closeSuccessMessage() {
     this.showSuccessMessage = false;
   }
 
-  // Export orders (feature)
+  
   exportOrders() {
-    // يمكنك تنفيذ تصدير CSV/PDF هنا
+  
     alert('Export feature coming soon!');
   }
 

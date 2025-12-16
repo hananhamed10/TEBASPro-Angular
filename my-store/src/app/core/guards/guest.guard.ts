@@ -9,11 +9,11 @@ export class GuestGuard implements CanActivate {
   constructor(private router: Router) {}
 
   canActivate(): boolean {
-    // تحقق بسيط - عدليه بعد كده علشان ي check مع الـ auth service
+    
     const isLoggedIn = localStorage.getItem('token');
     
     if (!isLoggedIn) {
-      return true; // يسمح للزوار
+      return true; 
     } else {
       this.router.navigate(['/dashboard']);
       return false;

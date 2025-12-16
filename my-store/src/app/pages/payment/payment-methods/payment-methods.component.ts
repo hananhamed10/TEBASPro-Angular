@@ -105,11 +105,11 @@ export class PaymentMethodsPage implements OnInit {
 
   editMethod(method: any) {
     this.notificationService.showInfo('Edit functionality coming soon');
-    // In real app, open edit modal
+
   }
 
   saveNewMethod() {
-    // In real app, save the new method
+
     this.notificationService.showSuccess('Payment method added successfully');
     this.showAddMethodModal = false;
     this.loadMethods();

@@ -76,8 +76,7 @@ export class NotificationService {
   }
 
   private showAlert(type: string, message: string): void {
-    // Create a simple browser alert for now
-    // In a real app, you might use a toast library
+    
     console.log(`${type.toUpperCase()}: ${message}`);
     
     // For demo, show browser alert

@@ -1,15 +1,12 @@
 
 
-// ==================== الأساسيات ====================
-
-// المنتج
 export interface Product {
   id: string | number;
   name: string;
   description?: string;
   price: number;
   image: string;
-  categoryId: number; // ⬅️ اجعله required ليس optional
+  categoryId: number; 
   stock?: number;
   originalPrice?: number;
   color?: string;
@@ -22,7 +19,7 @@ export interface Product {
   reviews?: number;
 }
 
-// الفئة
+
 export interface Category {
   id: number;
   name: string;
@@ -31,7 +28,7 @@ export interface Category {
   productCount?: number;
 }
 
-// المستخدم
+
 export interface User {
   id: number;
   email: string;
@@ -43,45 +40,27 @@ export interface User {
   avatar?: string;
 }
 
-// ==================== المتجر ====================
 
-// عنصر العربة
 export interface CartItem {
   product: Product;
   quantity: number;
   addedAt?: Date;
 }
 
-// عنصر المفضلة
+
 export interface WishlistItem {
   productId: number;
   product?: Product;
 }
 
-//عنصر الطلب
-// في model.ts - عدل تعريف OrderItem و Order
-// export interface OrderItem {
-//   id: string;
-//   productId: string; // ✅ إضافة هذا السطر
-//   product: {
-//     id: string;
-//     name: string;
-//     price: number;
-//     image: string;
-//     categoryId?: number; // ✅ إضافة هذا الاختياري
-//   };
-//   quantity: number;
-//   price: number;
-//   subtotal?: number; // ✅ إضافة هذا الاختياري
-// }
 
 
 export interface Order {
   id: string;
   orderNumber: string;
-  date: string; // ⬅️ استخدم date بدلاً من createdAt
-  createdAt?: string; // ⬅️ أضف كـ optional للتوافق
-  updatedAt?: string; // ⬅️ أضف كـ optional
+  date: string; 
+  createdAt?: string; 
+  updatedAt?: string; 
   status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
   items: OrderItem[];
   subtotal: number;
@@ -90,20 +69,20 @@ export interface Order {
   discount?: number;
   total: number;
   
-  // Shipping Information
+
   shippingAddress?: ShippingAddress;
   
-  // Payment Information
+
   paymentMethod?: string;
   paymentStatus?: string;
   payment?: PaymentInfo;
   
-  // Customer Information
+
   customerId?: number;
   customerName?: string;
   customerEmail?: string;
   
-  // Additional Fields
+
   notes?: string;
   estimatedDelivery?: string;
   trackingNumber?: string;
@@ -111,7 +90,7 @@ export interface Order {
   cancelledDate?: string;
   deliveredDate?: string;
   
-  // Delivery Information
+ 
   delivery?: {
     estimatedDate?: string;
     deliveredAt?: string;
@@ -129,14 +108,14 @@ export interface OrderItem {
   quantity: number;
   price: number;
   subtotal: number;
-  color?: string; // ⬅️ أضف
-  size?: string;  // ⬅️ أضف
+  color?: string; 
+  size?: string;  
 }
 
-// تحديث ShippingAddress
+
 export interface ShippingAddress {
   name: string;
-  fullName?: string; // ⬅️ أضف للتوافق
+  fullName?: string; 
   street: string;
   city: string;
   state: string;
@@ -152,13 +131,12 @@ export interface PaymentInfo {
   status: 'pending' | 'paid' | 'failed';
   transactionId?: string;
   paymentDate?: string;
-  paidAt?: string; // ⬅️ أضف للتوافق
+  paidAt?: string; 
 }
 
 
-// ==================== المراجعات ====================
 
-// التقييم
+
 export interface Review {
   id: number;
   productId: number;
@@ -168,15 +146,13 @@ export interface Review {
   createdAt: Date;
 }
 
-// ==================== المصادقة ====================
 
-// طلب تسجيل الدخول
 export interface LoginRequest {
   email: string;
   password: string;
 }
 
-// طلب التسجيل
+
 export interface RegisterRequest {
   email: string;
   password: string;
@@ -184,24 +160,20 @@ export interface RegisterRequest {
   lastName: string;
 }
 
-// استجابة المصادقة
+
 export interface AuthResponse {
   user: User;
   token: string;
 }
 
-// ==================== API ====================
 
-// استجابة API عامة
 export interface ApiResponse<T = any> {
   success: boolean;
   message?: string;
   data?: T;
 }
 
-// ==================== الفلاتر ====================
 
-// فلتر المنتجات
 export interface ProductFilter {
   categoryId?: number;
   minPrice?: number;

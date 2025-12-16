@@ -13,9 +13,9 @@
 
   @if (product) {
     <div class="row">
-      <!-- الصور -->
+
       <div class="col-lg-6">
-        <!-- الصورة الرئيسية -->
+        
         <div class="card border-0 shadow-sm mb-3">
           <img [src]="product.image" 
                [alt]="product.name" 
@@ -40,12 +40,12 @@
         }
       </div>
 
-      <!-- التفاصيل -->
+   
       <div class="col-lg-6">
-        <!-- العنوان -->
+       
         <h1 class="mb-2">{{ product.name }}</h1>
         
-        <!-- التقييم والمراجعات -->
+     
         <div class="d-flex align-items-center mb-3">
           <div class="text-warning me-2">
             @for (star of [1,2,3,4,5]; track star) {
@@ -59,7 +59,7 @@
           </button>
         </div>
 
-        <!-- السعر -->
+     
         <div class="mb-4">
           <span class="h2 text-primary">{{ product.price | currency:'EGP ':'symbol':'1.0-0' }}</span>
           
@@ -73,13 +73,12 @@
           }
         </div>
 
-        <!-- الوصف -->
         <div class="mb-4">
           <h5 class="mb-2">Description</h5>
           <p class="text-muted">{{ product.description }}</p>
         </div>
 
-        <!-- الألوان -->
+
         @if (product.colors && product.colors.length > 0) {
           <div class="mb-4">
             <h6 class="mb-3">
@@ -99,7 +98,7 @@
           </div>
         }
 
-        <!-- المقاسات -->
+      
         @if (product.sizes && product.sizes.length > 0) {
           <div class="mb-4">
             <h6 class="mb-3">
@@ -119,7 +118,7 @@
           </div>
         }
 
-        <!-- الكمية والمخزون -->
+      
         <div class="mb-4">
           <div class="row align-items-center">
             <div class="col-md-6 mb-3 mb-md-0">
@@ -173,9 +172,9 @@
           </div>
         </div>
 
-        <!-- الأزرار الرئيسية -->
+     
         <div class="d-flex gap-3 mb-4">
-          <!-- زر إضافة للعربة -->
+      
           <button class="btn btn-primary btn-lg flex-grow-1"
                   (click)="addToCart()"
                   [disabled]="getAvailableStock() === 0">
@@ -188,7 +187,6 @@
             }
           </button>
 
-          <!-- زر المفضلة -->
           <button class="btn btn-outline-danger btn-lg" 
                   (click)="toggleWishlist()"
                   [title]="isInWishlist ? 'Remove from wishlist' : 'Add to wishlist'"
@@ -196,7 +194,7 @@
             <i class="fas" [ngClass]="isInWishlist ? 'fa-heart' : 'far fa-heart'"></i>
           </button>
 
-          <!-- زر المشاركة -->
+      
           <button class="btn btn-outline-secondary btn-lg" 
                   (click)="shareProduct()"
                   title="Share product">
@@ -204,7 +202,7 @@
           </button>
         </div>
 
-        <!-- زر الشراء المباشر -->
+     
         <button class="btn btn-success btn-lg w-100 mb-4"
                 (click)="buyNow()"
                 [disabled]="getAvailableStock() === 0">
@@ -212,7 +210,7 @@
           Buy Now
         </button>
 
-        <!-- معلومات المنتج -->
+     
         <div class="row mb-4">
           <div class="col-md-6">
             <div class="card border-0 shadow-sm h-100">
@@ -255,7 +253,7 @@
           </div>
         </div>
 
-        <!-- معلومات التوصيل والعائدات -->
+    
         <div class="card border-0 shadow-sm mb-5">
           <div class="card-body">
             <div class="row text-center">
@@ -293,7 +291,7 @@
       </div>
     </div>
 
-    <!-- المنتجات ذات الصلة -->
+ 
     @if (relatedProducts.length > 0) {
       <div class="mt-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -356,7 +354,7 @@
       </div>
     }
   } @else {
-    <!-- حالة عدم وجود المنتج -->
+
     <div class="text-center py-5">
       <i class="fas fa-box-open fa-4x text-muted mb-3"></i>
       <h3 class="text-muted">Product Not Found</h3>

@@ -2,7 +2,7 @@
 // import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 // export class CustomValidators {
-//   // التحقق من تطابق كلمات المرور
+
 //   static passwordMatch(controlName: string, matchingControlName: string): ValidatorFn {
 //     return (formGroup: AbstractControl): ValidationErrors | null => {
 //       const control = formGroup.get(controlName);
@@ -26,7 +26,7 @@
 //     };
 //   }
 
-//   // التحقق من قوة كلمة المرور
+
 //   static strongPassword(control: AbstractControl): ValidationErrors | null {
 //     const value = control.value;
     
@@ -45,7 +45,7 @@
 //     return !passwordValid ? { strongPassword: true } : null;
 //   }
 
-//   // التحقق من قبول الشروط والأحكام
+
 //   static mustBeTrue(control: AbstractControl): ValidationErrors | null {
 //     return control.value === true ? null : { mustBeTrue: true };
 //   }

@@ -8,7 +8,7 @@ export class ShippingService {
   constructor() {}
 
   getShippingMethods(): Observable<any[]> {
-    // Return sample shipping methods
+
     return of([
       {
         id: 'standard',
@@ -71,7 +71,7 @@ export class ShippingService {
   }
 
   calculateShipping(address: any): Observable<any> {
-    // Simple shipping calculation based on address
+   
     const basePrice = address.country === 'USA' ? 4.99 : 14.99;
     const expressPrice = address.country === 'USA' ? 9.99 : 24.99;
     
@@ -136,7 +136,7 @@ export class ShippingService {
   addShippingAddress(address: any): Observable<any> {
     const addresses = this.getAddressesFromStorage();
     
-    // If this is the first address or user wants it as default, set as default
+   
     if (address.isDefault || addresses.length === 0) {
       addresses.forEach(addr => addr.isDefault = false);
       address.isDefault = true;
@@ -174,7 +174,7 @@ export class ShippingService {
     const addresses = this.getAddressesFromStorage();
     const filteredAddresses = addresses.filter(addr => addr.id !== addressId);
     
-    // If we deleted the default and there are other addresses, make first one default
+    
     if (filteredAddresses.length > 0 && !filteredAddresses.some(addr => addr.isDefault)) {
       filteredAddresses[0].isDefault = true;
     }

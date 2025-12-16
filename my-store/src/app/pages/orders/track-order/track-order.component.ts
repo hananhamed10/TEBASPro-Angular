@@ -21,7 +21,7 @@ export class TrackOrderPage implements OnInit, OnDestroy {
   liveUpdates = true;
   updateInterval: any;
   
-  // Map simulation (يمكن استبداله بخدمة خرائط حقيقية)
+  
   showMap = false;
   mapLocation = {
     lat: 40.7128,
@@ -29,9 +29,9 @@ export class TrackOrderPage implements OnInit, OnDestroy {
     zoom: 12
   };
   
-  // Delivery person simulation
+
   deliveryPerson = {
-    name: 'John Driver',
+    name: 'Anas Driver',
     phone: '+1 (555) 123-4567',
     rating: 4.8,
     photo: 'assets/images/driver-placeholder.jpg'
@@ -75,12 +75,12 @@ export class TrackOrderPage implements OnInit, OnDestroy {
           this.orderNumber = data.orderNumber;
           this.loading = false;
           
-          // Update delivery person info if available
+         
           if (data.deliveryPerson) {
             this.deliveryPerson = { ...this.deliveryPerson, ...data.deliveryPerson };
           }
           
-          // Update map location if available
+          
           if (data.currentLocation) {
             this.mapLocation = {
               lat: data.currentLocation.lat || this.mapLocation.lat,
@@ -98,12 +98,12 @@ export class TrackOrderPage implements OnInit, OnDestroy {
       });
   }
 
-  // Live tracking simulation
+ 
   startLiveUpdates() {
     if (this.liveUpdates) {
       this.updateInterval = setInterval(() => {
         this.simulateLiveUpdate();
-      }, 30000); // Update every 30 seconds
+      }, 30000); 
     }
   }
 
@@ -118,13 +118,13 @@ export class TrackOrderPage implements OnInit, OnDestroy {
       return;
     }
     
-    // Simulate location updates
+   
     if (this.tracking.status === 'shipped') {
-      // Move location slightly
+   
       this.mapLocation.lat += 0.001;
       this.mapLocation.lng += 0.001;
       
-      // Add tracking event
+      
       if (this.tracking.events && this.tracking.events.length > 0) {
         const lastEvent = this.tracking.events[0];
         const newEvent = {
@@ -280,18 +280,18 @@ export class TrackOrderPage implements OnInit, OnDestroy {
     return statusProgress[this.tracking?.status] || 0;
   }
 
-  // Check if order is trackable
+ 
   isTrackable(): boolean {
     return this.tracking && 
            ['processing', 'shipped', 'out_for_delivery'].includes(this.tracking.status);
   }
 
-  // Navigate back
+
   goBack() {
     this.router.navigate(['/orders']);
   }
 
-  // Refresh tracking
+ 
   refreshTracking() {
     this.loadTracking();
     this.notificationService.showInfo('Refreshing tracking information...');

@@ -1,4 +1,4 @@
-// src/app/core/services/product.service.ts
+
 import { Injectable } from '@angular/core';
 import { Product } from '../../core/models/model'
 
@@ -1323,17 +1323,9 @@ export class ProductService {
     }
   ];
 
-  // Methods
-
-// // أضيفي نوع القيمة المعادة
-// getProductById(id: number): Product | undefined {
-//   return this.products.find(product => product.id === id);
-// }
-
-// في product.service.ts
+  
 getProductById(id: number): Product | undefined {
-  // إذا كنت تريدين إرجاع null بدلاً من undefined، غيريها إلى:
-  // return this.products.find(product => product.id === id) || null;
+ 
   return this.products.find(product => product.id === id);
 }
 

@@ -1,18 +1,18 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
   <div class="container">
-    <!-- اللوجو -->
+   
      <a class="navbar-brand fw-bold" routerLink="/dashboard">
       Tebas
     </a>
 
-    <!-- زر القائمة للموبايل -->
+  
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <!-- محتوى النافبار -->
+   
     <div class="collapse navbar-collapse" id="navbarNav">
-      <!-- القائمة اليسرى -->
+    
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
           <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">
@@ -42,7 +42,7 @@
         </li>
       </ul>
 
-      <!-- القائمة اليمنى - بيانات اليوزر -->
+   
       <ul class="navbar-nav ms-auto">
         @if (isLoggedIn && userName) {
           <li class="nav-item dropdown" [class.show]="isDropdownOpen">
@@ -51,7 +51,7 @@
                (click)="toggleDropdown()"
                aria-expanded="isDropdownOpen">
                
-              <!-- صورة البروفايل أو الأحرف الأولى -->
+             
               <div class="user-avatar me-2">
                 @if (userInitials) {
                   <span class="avatar-circle bg-light text-primary fw-bold d-flex align-items-center justify-content-center" 
@@ -63,15 +63,14 @@
                 }
               </div>
               
-              <!-- اسم اليوزر -->
               <span class="text-light">
                 {{ userName }}
               </span>
             </a>
             
-            <!-- قائمة dropdown -->
+        
             <ul class="dropdown-menu dropdown-menu-end" [class.show]="isDropdownOpen">
-              <!-- User Info Section -->
+        
               <li class="dropdown-header">
                 <div class="d-flex align-items-center">
                   <div class="me-2">
@@ -90,7 +89,7 @@
               </li>
               <li><hr class="dropdown-divider"></li>
               
-              <!-- Navigation Links -->
+      
               <li>
                 <a class="dropdown-item" routerLink="/profile" (click)="closeDropdown()">
                   <i class="fas fa-user me-2"></i> My Profile
@@ -117,7 +116,7 @@
                 </a>
               </li>
               
-              <!-- Settings Section -->
+           
               <li><hr class="dropdown-divider"></li>
               <li>
                 <a class="dropdown-item" routerLink="/payment-methods" (click)="closeDropdown()">
@@ -130,7 +129,6 @@
                 </a>
               </li>
               
-              <!-- Admin Section (إذا كان admin) -->
               @if (authService.isAdmin()) {
                 <li><hr class="dropdown-divider"></li>
                 <li class="dropdown-header">Admin</li>
@@ -151,7 +149,7 @@
             </ul>
           </li>
         } @else {
-          <!-- لو مش عامل لوجن -->
+     
           <li class="nav-item">
             <a class="nav-link" routerLink="/login">
               <i class="fas fa-sign-in-alt me-1"></i> Login

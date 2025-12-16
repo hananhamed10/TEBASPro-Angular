@@ -9,7 +9,7 @@ import { OrderService } from '../../../core/services/order.service';
   styleUrls: ['./payment-success.component.scss']
 })
 export class PaymentSuccessPage implements OnInit {
-  // Data from query params
+
   orderId: string = '';
   orderNumber: string = '';
   transactionId: string = '';
@@ -22,7 +22,7 @@ export class PaymentSuccessPage implements OnInit {
   orderDetails: any = null;
   isLoading: boolean = true;
   
-  // ✅ أضيفي هذا: متغير التاريخ الحالي
+  
   today: Date = new Date();
   
   // Payment method configurations
@@ -87,10 +87,10 @@ export class PaymentSuccessPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    // ✅ تحديث التاريخ الحالي
+    
     this.today = new Date();
     
-    // Get data from query params
+    
     this.route.queryParams.subscribe(params => {
       this.orderId = params['orderId'] || '';
       this.orderNumber = params['orderNumber'] || '';
@@ -106,7 +106,7 @@ export class PaymentSuccessPage implements OnInit {
 
   loadOrderDetails() {
     if (this.orderId) {
-      // Get order details from OrderService
+     
       this.orderService.getOrderDetails(this.orderId).subscribe({
         next: (order) => {
           this.orderDetails = order;
@@ -118,7 +118,7 @@ export class PaymentSuccessPage implements OnInit {
         }
       });
     } else if (this.orderNumber) {
-      // Try to find by order number
+     
       this.orderService.getUserOrders().subscribe(orders => {
         const order = orders.find(o => o.orderNumber === this.orderNumber);
         this.orderDetails = order || this.getSampleOrderDetails();
@@ -134,23 +134,22 @@ export class PaymentSuccessPage implements OnInit {
     this.isLoading = false;
   }
 
-  // Get configuration for current payment method
+  
   getPaymentConfig() {
     return this.paymentMethodsConfig[this.paymentMethod as keyof typeof this.paymentMethodsConfig] 
            || this.paymentMethodsConfig.creditCard;
   }
 
-  // Check if payment needs further action
+ 
   needsPaymentAction(): boolean {
     return ['vodafoneCash', 'instapay'].includes(this.paymentMethod);
   }
 
-  // Check if payment is completed
   isPaymentCompleted(): boolean {
     return ['creditCard', 'cash'].includes(this.paymentMethod);
   }
 
-  // Main actions
+ 
   goToOrderDetails() {
     if (this.orderId) {
       this.router.navigate(['/orders', this.orderId]);
@@ -229,7 +228,7 @@ export class PaymentSuccessPage implements OnInit {
     };
   }
 
-  // ✅ دالة جديدة للحصول على التاريخ للعرض الآمن
+ 
   getDisplayDate(): string {
     if (this.orderDetails?.date) {
       return this.formatDate(this.orderDetails.date);
@@ -252,7 +251,6 @@ export class PaymentSuccessPage implements OnInit {
     return price * quantity;
   }
 
-  // Format date nicely
   formatDate(dateInput: string | Date): string {
     if (!dateInput) return 'N/A';
     
@@ -266,7 +264,7 @@ export class PaymentSuccessPage implements OnInit {
     });
   }
 
-  // ✅ دالة إضافية للحصول على الوقت
+  
   getDisplayTime(): string {
     return this.today.toLocaleTimeString('en-US', {
       hour: '2-digit',
@@ -274,7 +272,7 @@ export class PaymentSuccessPage implements OnInit {
     });
   }
 
-  // ✅ دالة لتنسيق المبلغ
+
   formatCurrency(amount: number): string {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -282,7 +280,7 @@ export class PaymentSuccessPage implements OnInit {
     }).format(amount);
   }
 
-  // ✅ دالة للتحقق من صحة البيانات
+  
   hasValidOrderData(): boolean {
     return !!(this.orderId || this.orderNumber);
   }

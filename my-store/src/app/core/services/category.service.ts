@@ -461,17 +461,17 @@ export class CategoryService {
     }
   ];
 
-  // تجيب كل الكاتيجوريز
+ 
   getCategories() {
     return this.categories;
   }
 
-  // تجيب كاتيجوري بالـ ID
+
   getCategoryById(id: number) {
     return this.categories.find(category => category.id === id);
   }
 
-  // تجيب كل البرودكتس من كل الكاتيجوريز
+
   getAllProducts() {
     return this.categories.flatMap(category => 
       category.products.map(product => ({
@@ -482,7 +482,6 @@ export class CategoryService {
     );
   }
 
-  // تجيب برودكتس كاتيجوري معينة
   getProductsByCategory(categoryId: number) {
     const category = this.getCategoryById(categoryId);
     return category ? category.products : [];

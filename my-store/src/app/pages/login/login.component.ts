@@ -41,7 +41,7 @@ export class LoginComponent {
     this.isLoading = false;
   }
 
-  // Getters للوصول سهل للـ form controls
+  
   get email() { return this.loginForm.get('email'); }
   get password() { return this.loginForm.get('password'); }
 }

@@ -154,7 +154,7 @@ export class CartComponent implements OnInit, OnDestroy {
     });
   }
 
-  // ✅ إصلاح: تحويل product.id إلى number
+ 
   updateQuantity(item: CartItem, change: number): void {
     console.log('📈 Updating quantity for item:', item.product.name, 'change:', change);
     
@@ -171,7 +171,7 @@ export class CartComponent implements OnInit, OnDestroy {
       return;
     }
     
-    // ✅ الحل: تحويل ID إلى number
+
     const productId = this.convertToNumber(item.product.id);
     
     this.cartService.updateQuantity(productId, newQuantity).subscribe({
@@ -190,7 +190,7 @@ export class CartComponent implements OnInit, OnDestroy {
     });
   }
 
-  // ✅ إصلاح: تحويل product.id إلى number
+
   removeItem(item: CartItem): void {
     console.log('🗑️ Removing item from cart:', item.product.name);
     
@@ -215,7 +215,7 @@ export class CartComponent implements OnInit, OnDestroy {
     }
   }
 
-  // ✅ إصلاح: تحويل product.id إلى number
+  
   moveToWishlist(item: CartItem): void {
     console.log('💖 Moving item to wishlist:', item.product.name);
     
@@ -230,7 +230,7 @@ export class CartComponent implements OnInit, OnDestroy {
       addedAt: new Date()
     }).subscribe({
       next: () => {
-        // ✅ الحل: تحويل ID إلى number
+      
         const productId = this.convertToNumber(item.product.id);
         
         this.cartService.removeFromCart(productId).subscribe({
@@ -250,7 +250,7 @@ export class CartComponent implements OnInit, OnDestroy {
     });
   }
 
-  // ✅ إصلاح: تحويل product.id إلى number
+ 
   saveForLater(item: CartItem): void {
     console.log('💾 Saving item for later:', item.product.name);
     
@@ -264,7 +264,7 @@ export class CartComponent implements OnInit, OnDestroy {
         savedItems.push(item.product);
         localStorage.setItem('savedForLater', JSON.stringify(savedItems));
         
-        // ✅ الحل: تحويل ID إلى number
+   
         const productId = this.convertToNumber(item.product.id);
         
         this.cartService.removeFromCart(productId).subscribe({
@@ -277,7 +277,7 @@ export class CartComponent implements OnInit, OnDestroy {
           }
         });
       } else {
-        // ✅ الحل: تحويل ID إلى number
+    
         const productId = this.convertToNumber(item.product.id);
         
         this.cartService.removeFromCart(productId).subscribe({
@@ -393,7 +393,7 @@ export class CartComponent implements OnInit, OnDestroy {
     }
   }
 
-  // ✅ دالة مساعدة لتحويل ID إلى number
+ 
   private convertToNumber(id: string | number): number {
     if (typeof id === 'string') {
       const parsed = parseInt(id, 10);

@@ -80,9 +80,9 @@ import { CartService } from './core/services/cart.service';
 import { AuthGuard } from './core/guards/auth.guard';
 import { GuestGuard } from './core/guards/guest.guard';
 
-// ⚠️ **تحديد الـ Routes بشكل صحيح بدون lazy loading للأوردر ديتيلز**
+
 const routes: Routes = [
-  // ===== PUBLIC ROUTES (No Auth Required) =====
+
   { 
     path: 'home', 
     component: HomeComponent 
@@ -122,12 +122,7 @@ const routes: Routes = [
     component: PaymentSuccessPage 
   },
   
-  // { 
-  //   path: 'payment-failed', 
-  //   component: PaymentFailedPage 
-  // },
-  
-  // Auth Pages (Only for guests)
+
   { 
     path: 'login', 
     component: LoginComponent,
@@ -139,15 +134,13 @@ const routes: Routes = [
     canActivate: [GuestGuard]
   },
   
-  // ===== PROTECTED ROUTES (Auth Required) =====
-  // Checkout (محمي)
   { 
     path: 'checkout', 
     component: CheckoutComponent,
     canActivate: [AuthGuard]
   },
   
-  // Protected Routes with User Layout
+
   { 
     path: '', 
     component: UserLayoutComponent,

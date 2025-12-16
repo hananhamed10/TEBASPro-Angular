@@ -22,7 +22,7 @@ export class CategoryProductsComponent implements OnInit {
   }
 
   loadCategoryProducts() {
-    // نجيب الـ category بالـ ID من الـ service
+
     const category = this.categoryService.getCategoryById(parseInt(this.categoryId));
     
     if (category) {
@@ -30,9 +30,9 @@ export class CategoryProductsComponent implements OnInit {
         name: category.name,
         description: category.description
       };
-      this.products = category.products; // ← هنا بنجب المنتجات الحقيقية
+      this.products = category.products; 
     } else {
-      // لو الـ category مش موجودة
+
       this.category = {
         name: 'Category ' + this.categoryId,
         description: 'Category not found'

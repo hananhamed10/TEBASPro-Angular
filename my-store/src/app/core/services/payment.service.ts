@@ -10,36 +10,36 @@ export class PaymentService {
 
   constructor() {}
 
-  // ✅ **تعديل: أضيفي paymentMethod كـ parameter**
+ 
   processPayment(paymentData: any, paymentMethod: string): Observable<any> {
     return new Observable(observer => {
       setTimeout(() => {
         let success: boolean;
         let message: string;
         
-        // ✅ **تحديد نسبة النجاح حسب طريقة الدفع**
+     
         switch(paymentMethod) {
           case 'creditCard':
-            success = Math.random() > 0.2; // 80% success for credit cards
+            success = Math.random() > 0.2; 
             message = success ? 'Credit card payment successful' : 'Credit card payment declined';
             break;
           case 'vodafoneCash':
-            success = Math.random() > 0.1; // 90% success for Vodafone Cash
+            success = Math.random() > 0.1; 
             message = success ? 'Vodafone Cash payment successful' : 'Vodafone Cash payment failed';
             break;
           case 'instapay':
-            success = Math.random() > 0.15; // 85% success for Instapay
+            success = Math.random() > 0.15; 
             message = success ? 'Instapay payment successful' : 'Instapay payment failed';
             break;
           default:
-            success = Math.random() > 0.1; // 90% success rate for others
+            success = Math.random() > 0.1; 
             message = success ? 'Payment successful' : 'Payment failed';
         }
         
         if (success) {
           const transactionId = 'TXN-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
           
-          // ✅ **حفظ تفاصيل المعاملة**
+          
           const transaction = {
             id: transactionId,
             orderId: paymentData.orderId,
@@ -71,11 +71,11 @@ export class PaymentService {
           });
         }
         observer.complete();
-      }, paymentMethod === 'cash' ? 500 : 2000); // ✅ وقت مختلف حسب طريقة الدفع
+      }, paymentMethod === 'cash' ? 500 : 2000); 
     });
   }
 
-  // ✅ **دالة جديدة: معالجة الدفع الكاش**
+
   processCashPayment(orderData: any): Observable<any> {
     return of({
       success: true,
@@ -83,11 +83,11 @@ export class PaymentService {
       paymentMethod: 'cash',
       orderId: orderData.orderId,
       orderNumber: orderData.orderNumber,
-      expectedDelivery: this.getFutureDate(3) // توصيل خلال 3 أيام
+      expectedDelivery: this.getFutureDate(3) 
     });
   }
 
-  // ✅ **دالة جديدة: الحصول على تفاصيل فودافون كاش**
+ 
   getVodafoneCashDetails(): Observable<any> {
     return of({
       vodafoneNumber: '01012345678',
@@ -101,7 +101,7 @@ export class PaymentService {
     });
   }
 
-  // ✅ **دالة جديدة: الحصول على تفاصيل انستاباي**
+  
   getInstapayDetails(): Observable<any> {
     return of({
       bankName: 'CIB',
@@ -117,7 +117,7 @@ export class PaymentService {
     });
   }
 
-  // ✅ **دالة جديدة: التحقق من حالة الدفع**
+  
   checkPaymentStatus(orderId: string): Observable<any> {
     const transactions = this.getTransactionsFromStorage();
     const transaction = transactions.find(t => t.orderId === orderId);
@@ -135,7 +135,7 @@ export class PaymentService {
       return of(JSON.parse(methods));
     }
     
-    // ✅ **إضافة طرق الدفع المحلية**
+    
     const sampleMethods = [
       {
         id: '1',
@@ -184,7 +184,7 @@ export class PaymentService {
       return of(transaction);
     }
     
-    // Fallback إذا مش موجود
+   
     return of({
       transactionId: transactionId,
       status: 'completed',
@@ -234,7 +234,7 @@ export class PaymentService {
     return of({ success: true, message: 'Default payment method updated' });
   }
 
-  // ✅ **دوال مساعدة جديدة**
+  
   private saveTransaction(transaction: any): void {
     const transactions = this.getTransactionsFromStorage();
     transactions.push(transaction);
@@ -258,6 +258,6 @@ export class PaymentService {
   private getFutureDate(days: number): string {
     const date = new Date();
     date.setDate(date.getDate() + days);
-    return date.toISOString().split('T')[0]; // تاريخ فقط بدون وقت
+    return date.toISOString().split('T')[0]; 
   }
 }

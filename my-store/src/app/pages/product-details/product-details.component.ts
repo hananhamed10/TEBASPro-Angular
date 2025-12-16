@@ -50,7 +50,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
       this.loadProductDetails(numericId);
       this.checkWishlistStatus(productId);
       
-      // ✅ Subscribe to cartItems$ for automatic inCartQuantity updates
+     
       this.cartSubscription = this.cartService.cartItems$.subscribe({
         next: (cartItems) => {
           console.log('🔄 Cart updated:', cartItems.length, 'products');
@@ -71,14 +71,14 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // ✅ Clean up subscription to prevent memory leaks
+
     if (this.cartSubscription) {
       this.cartSubscription.unsubscribe();
       console.log('🧹 Cart subscription cleaned up');
     }
   }
 
-  // ✅ دالة للحصول على كلاس المخزون
+
   getStockClass() {
     const stock = this.product?.stock || 0;
     return {
@@ -88,7 +88,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     };
   }
 
-  // ✅ دالة للحصول على المخزون المتاح
+
   getAvailableStock(): number {
     if (!this.product) return 0;
     
@@ -104,7 +104,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     return Math.floor(value);
   }
 
-  // ✅ Star rating helper
+  
   getStarClass(rating: number, star: number): string {
     if (star <= Math.floor(rating)) {
       return 'fas fa-star';
@@ -115,12 +115,12 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  // ✅ Simple star rating (no half stars)
+ 
   getSimpleStarClass(rating: number, star: number): string {
     return star <= Math.floor(rating) ? 'fas fa-star' : 'far fa-star';
   }
   
-  // Add to cart from related products
+
   addToCartFromRelated(product: Product): void {
     console.log('🛒 Adding related product:', product?.name);
     
@@ -147,7 +147,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     
     console.log(`➕ Adding related product: ${product.name} (ID: ${product.id})`);
     
-    // ✅ Correct usage with subscribe
+
     this.cartService.addToCart(product, 1).subscribe({
       next: (response) => {
         console.log('✅ Add to cart response:', response);
@@ -155,7 +155,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
         if (response.success) {
           this.notificationService.showSuccess(response.message || 'Added to cart successfully!');
           
-          // Update quantity if it's the same as main product
+      
           if (this.product && product.id === this.product.id) {
             this.inCartQuantity += 1;
             console.log(`📈 Updated main product quantity to: ${this.inCartQuantity}`);

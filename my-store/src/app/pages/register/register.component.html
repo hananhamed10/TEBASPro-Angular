@@ -5,11 +5,11 @@
         <div class="card shadow-lg border-0">
           <div class="card-body p-5">
             
-            <!-- العنوان -->
+          
             <h2 class="text-center mb-4 text-primary">🎉 {{ 'create your account' | uppercaseFirst }}</h2>
             <p class="text-center text-muted mb-4">{{ 'join us today and get started' | capitalize }}</p>
             
-            <!-- رسالة النجاح -->
+       
             @if (successMessage) {
               <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
                 <div class="d-flex align-items-center">
@@ -22,7 +22,7 @@
               </div>
             }
 
-            <!-- تأكيد الإيميل -->
+        
             @if (showEmailVerification) {
               <div class="alert alert-info text-center mb-4">
                 <h5 class="mb-3">📧 {{ 'verification code sent' | uppercaseFirst }}!</h5>
@@ -36,13 +36,13 @@
               </div>
             }
 
-            <!-- الـ Spinner والتحميل -->
+         
             @if (loading) {
               <div class="text-center mb-4">
-                <!-- Spinner مخصص -->
+                
                 <div class="custom-spinner mb-3"></div>
                 
-                <!-- Progress Bar -->
+             
                 <div class="progress-loader mb-2">
                   <div class="progress-bar" [style.width.%]="progressValue"></div>
                 </div>
@@ -55,7 +55,6 @@
               </div>
             }
 
-            <!-- الإحصائيات -->
             <div class="row text-center mb-4">
               <div class="col-4">
                 <div class="border rounded p-2 bg-light">
@@ -77,10 +76,10 @@
               </div>
             </div>
             
-            <!-- الفورم -->
+          
             <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" [class.d-none]="successMessage">
               
-              <!-- الاسم الأول -->
+           
               <div class="mb-3">
                 <label class="form-label fw-bold">👤 {{ 'first name' | uppercaseFirst }}</label>
                 <input 
@@ -102,7 +101,7 @@
                 }
               </div>
 
-              <!-- الاسم الأخير -->
+         
               <div class="mb-3">
                 <label class="form-label fw-bold">👥 {{ 'last name' | uppercaseFirst }}</label>
                 <input 
@@ -124,7 +123,7 @@
                 }
               </div>
               
-              <!-- الإيميل -->
+            
               <div class="mb-3">
                 <label class="form-label fw-bold">📧 {{ 'email address' | uppercaseFirst }}</label>
                 <input 
@@ -146,7 +145,6 @@
                 }
               </div>
 
-              <!-- التليفون -->
               <div class="mb-3">
                 <label class="form-label fw-bold">📱 {{ 'phone number' | uppercaseFirst }}</label>
                 <input 
@@ -167,8 +165,7 @@
                   </div>
                 }
               </div>
-              
-              <!-- الباسورد -->
+             
               <div class="mb-3">
                 <label class="form-label fw-bold">🔒 {{ 'password' | uppercaseFirst }}</label>
                 <input 
@@ -190,7 +187,7 @@
                 }
               </div>
               
-              <!-- تأكيد الباسورد -->
+             
               <div class="mb-4">
                 <label class="form-label fw-bold">✅ {{ 'confirm password' | uppercaseFirst }}</label>
                 <input 
@@ -212,7 +209,6 @@
                 }
               </div>
               
-              <!-- زرار الإنشاء -->
               <button 
                 type="submit" 
                 class="btn btn-primary btn-lg w-100 py-3 fw-bold"
@@ -228,8 +224,7 @@
                 }
               </button>
             </form>
-            
-            <!-- رابط اللوجن -->
+         
             <div class="text-center mt-4">
               <p class="mb-0">
                 {{ 'already have an account' | capitalize }}? 
@@ -239,7 +234,7 @@
               </p>
             </div>
 
-            <!-- التاريخ والوقت -->
+        
             <div class="text-center mt-3">
               <small class="text-muted">
                 {{ 'registration page' | uppercaseFirst }} - 

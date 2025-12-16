@@ -8,5 +8,5 @@ import { Component } from '@angular/core';
   standalone: false
 })
 export class HomeComponent {
-  isAuthenticated = false; // مؤقت - سيتم توصيله بالخدمة لاحقاً
+  isAuthenticated = false; 
 }

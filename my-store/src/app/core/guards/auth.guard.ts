@@ -17,12 +17,12 @@ export class AuthGuard implements CanActivate {
     state: RouterStateSnapshot
   ): boolean {
     if (this.authService.isLoggedIn()) {
-      return true; // ✅ يسمح بالدخول لو اليوزر عامل لوجن
+      return true; 
     } else {
-      // 🔥 **التعديل هنا: نحفظ الصفحة الحالية قبل ما نروح للوجن**
+    
       this.authService.setReturnUrl(state.url);
       
-      // بيروح للوجن
+    
       this.router.navigate(['/login']);
       return false;
     }

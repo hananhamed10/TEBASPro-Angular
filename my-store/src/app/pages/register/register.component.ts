@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../core/services/auth.service'; // ⭐ مهم نضيف ده
+import { AuthService } from '../../core/services/auth.service'; 
 
 @Component({
   selector: 'app-register',
@@ -18,7 +18,7 @@ export class RegisterComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private authService: AuthService // ⭐ نضيف الـ AuthService هنا
+    private authService: AuthService 
   ) {
     this.registerForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.minLength(2)]],
@@ -41,62 +41,69 @@ export class RegisterComponent {
     return null;
   }
 
-  onSubmit(): void {
-    console.log('🎯 الزرار اتداس عليه!');
-    
-    if (this.registerForm.valid) {
-      this.loading = true;
-      this.successMessage = '';
-      this.showEmailVerification = false;
-      this.progressValue = 0;
-      
-      // محاكاة progress bar
-      const progressInterval = setInterval(() => {
-        this.progressValue += 10;
-        if (this.progressValue >= 100) {
-          clearInterval(progressInterval);
-        }
-      }, 300);
-      
-      // محاكاة الـ API
-      setTimeout(() => {
-        this.loading = false;
-        this.progressValue = 100;
-        
-        // رسالة النجاح
-        this.successMessage = '🎉 Account created successfully! You are being redirected to the dashboard...';
-        
-        // ⭐ نستخدم الـ AuthService الجديد بدل localStorage مباشرة
-        const userData = {
-          firstName: this.registerForm.get('firstName')?.value,
-          lastName: this.registerForm.get('lastName')?.value,
-          email: this.registerForm.get('email')?.value,
-          phone: this.registerForm.get('phone')?.value,
-          registeredAt: new Date().toISOString()
-        };
-        
-        // نستدعي دالة الريجستير من الـ AuthService
-        const registrationSuccess = this.authService.register(userData);
-        
-        if (registrationSuccess) {
-          // التوجيه للداشبورد بعد ٣ ثواني
-          setTimeout(() => {
-            this.router.navigate(['/dashboard']);
-          }, 3000);
-        } else {
-          console.error('❌ فشل في عملية التسجيل');
-        }
-        
-      }, 3000);
-    } else {
-      console.log('❌ الفورم مش صحيح!', this.registerForm.errors);
-      this.registerForm.markAllAsTouched();
-    }
-  }
+ onSubmit(): void { 
+console.log('🎯 Button stepped on!'); 
 
-  // دالة لإعادة إرسال كود التفعيل
-  resendVerification(): void {
-    console.log('🔄 إعادة إرسال كود التفعيل...');
-    alert('تم إرسال كود التفعيل مرة أخرى إلى بريدك الإلكتروني!');
-  }
+if (this.registerForm.valid) { 
+this. loading = true; 
+this.successMessage = ''; 
+this.showEmailVerification = false; 
+this. progressValue = 0; 
+
+
+const progressInterval = setInterval(() => { 
+this.progressValue += 10; 
+if (this.progressValue >= 100) { 
+clearInterval(progressInterval); 
+} 
+}, 300); 
+
+
+setTimeout(() => { 
+this. loading = false; 
+this. progressValue = 100; 
+
+
+this.successMessage = '🎉 Account created successfully! You are being redirected to the dashboard...'; 
+
+
+const userData = { 
+firstName: this.registerForm.get('firstName')?.value, 
+lastName: this.registerForm.get('lastName')?.value, 
+email: this.registerForm.get('email')?.value, 
+phone: this.registerForm.get('phone')?.value, 
+registeredAt: new Date().toISOString() 
+}; 
+
+
+const registrationSuccess = this.authService.register(userData); 
+
+if (registrationSuccess) { 
+
+setTimeout(() => { 
+this.router.navigate(['/dashboard']); 
+}, 3000);
+
+} else {
+console.error('❌ Registration failed');
+
+}
+
+}, 3000);
+
+} else {
+console.log('❌ Form is invalid!', this.registerForm.errors);
+
+this.registerForm.markAllAsTouched();
+
+}
+
+}
+
+resendVerification(): void {
+console.log('🔄 Resend activation code...');
+
+alert('Activation code has been sent back to your email!');
+
+}
 }

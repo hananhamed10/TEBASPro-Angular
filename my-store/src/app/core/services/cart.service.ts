@@ -60,13 +60,13 @@ export class CartService {
     }
     
     private validateProduct(product: any): Product {
-        // ✅ تحويل id إلى number دائمًا
+       
         const productId = typeof product.id === 'string' ? 
                          parseInt(product.id, 10) || 0 : 
                          Number(product.id) || 0;
         
         return {
-            id: productId, // ⬅️ الآن دائماً number
+            id: productId, 
             name: product.name || 'Unknown Product',
             description: product.description || '',
             price: product.price || 0,
@@ -114,7 +114,7 @@ export class CartService {
         this.cartTotalSubject.next(total);
     }
     
-    // ✅ تحديث: تقبل string أو number
+   
     addToCart(product: Product, quantity: number = 1): Observable<CartResponse> {
         console.log('🛒 addToCart called:', { 
             id: product?.id, 
@@ -134,7 +134,7 @@ export class CartService {
                     return;
                 }
                 
-                // ✅ تحويل id إلى number
+             
                 const productId = typeof product.id === 'string' ? 
                                  parseInt(product.id, 10) || 0 : 
                                  Number(product.id) || 0;
@@ -149,7 +149,7 @@ export class CartService {
                 }
                 
                 const processedProduct: Product = {
-                    id: productId, // ⬅️ الآن number
+                    id: productId, // 
                     name: product.name || `Product ${productId}`,
                     description: product.description || '',
                     price: product.price || 0,
@@ -220,11 +220,11 @@ export class CartService {
         });
     }
     
-    // ✅ تحديث: تقبل string أو number
+   
     removeFromCart(productId: string | number): Observable<CartResponse> {
         return new Observable<CartResponse>(subscriber => {
             try {
-                // ✅ تحويل إلى number
+              
                 const id = typeof productId === 'string' ? 
                           parseInt(productId, 10) || 0 : 
                           Number(productId) || 0;
@@ -278,11 +278,11 @@ export class CartService {
         });
     }
     
-    // ✅ تحديث: تقبل string أو number
+   
     updateQuantity(productId: string | number, quantity: number): Observable<CartResponse> {
         return new Observable<CartResponse>(subscriber => {
             try {
-                // ✅ تحويل إلى number
+              
                 const id = typeof productId === 'string' ? 
                           parseInt(productId, 10) || 0 : 
                           Number(productId) || 0;
@@ -346,7 +346,7 @@ export class CartService {
         });
     }
     
-    // ✅ تحديث: تقبل string أو number
+
     isProductInCart(productId: string | number): boolean {
         const id = typeof productId === 'string' ? 
                   parseInt(productId, 10) || 0 : 
@@ -356,7 +356,7 @@ export class CartService {
         return items.some(item => item.product && item.product.id === id);
     }
     
-    // ✅ تحديث: تقبل string أو number
+   
     getProductQuantity(productId: string | number): number {
         const id = typeof productId === 'string' ? 
                   parseInt(productId, 10) || 0 : 
@@ -367,7 +367,7 @@ export class CartService {
         return item ? item.quantity : 0;
     }
     
-    // بقية الدوال كما هي...
+  
     getCartItems(): CartItem[] {
         return [...this.cartItemsSubject.value];
     }
@@ -414,16 +414,16 @@ export class CartService {
     }
     
     moveWishlistToCart(items: any[]): Observable<CartResponse> {
-        // ... بقية الكود كما هو
+      
         return new Observable<CartResponse>(subscriber => {
-            // ... implementation
+            
         });
     }
     
     debugAndFixCart(): Observable<CartResponse> {
-        // ... بقية الكود كما هو
+     
         return new Observable<CartResponse>(subscriber => {
-            // ... implementation
+           
         });
     }
     
